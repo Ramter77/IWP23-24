@@ -28,7 +28,7 @@ HOST = 'localhost:5005'
 
 with st.sidebar:
     URIprefix = st.text_input(label="URI prefix", value=URIprefixValue, key="URIpre", placeholder="Input the URI prefix", help="The URI prefix")    #set uri prefix from textgenUI
-    URI = f'https://{URIprefix}.trycloudflare.com/api/v1/generate'              #add prefix to get complete URI
+    URI = f'wss://{URIprefix}.trycloudflare.com/api/v1/chat-stream'              #add prefix to get complete URI
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")        #set low to get deterministic results
 
 async def run(user_input, history):
