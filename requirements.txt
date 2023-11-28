@@ -1,2 +1,13 @@
 streamlit
+st_click_detector
+st_clickable_images
+audiorecorder
+streamlit_extras
+streamlit_chat
+
+
+
+
+
+
 
