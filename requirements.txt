@@ -1,10 +1,10 @@
 pyaudio
-audiorecorder
 streamlit
 st_click_detector
 st_clickable_images
 streamlit_extras
 streamlit_chat
+streamlit-audiorecorder
 websockets
 
 
