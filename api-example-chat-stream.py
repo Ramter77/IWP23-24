@@ -79,8 +79,8 @@ def footer():
 
 def audioRecord():  #AUDIO RECORDING
     audio = audio_recorder("Click to record audio", "Click to stop recording")
-    if len(audio) > 0:
-        st.audio(audio.export().read())     # To play audio in frontend:
+    #if len(audio) > 0:
+    #    st.audio(audio.export().read())     # To play audio in frontend:
 
 def stickHeader():
     # make header sticky.
