@@ -1,0 +1,6 @@
+streamlit
+st_click_detector
+st_clickable_images
+audiorecorder
+streamlit_chat
+streamlit_extras.switch_page_button
