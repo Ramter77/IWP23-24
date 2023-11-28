@@ -74,7 +74,7 @@ def footer():
         if (clicked == 2):
             switch_page("Quests")
 
-        audioRecord()
+        #audioRecord()
         stickFooter()
 
 def audioRecord():  #AUDIO RECORDING
