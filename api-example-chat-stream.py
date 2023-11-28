@@ -7,7 +7,7 @@ import streamlit as st
 from st_click_detector import click_detector
 from st_clickable_images import clickable_images
 import requests
-from audiorecorder import audiorecorder
+import audiorecorder
 from streamlit_extras.switch_page_button import switch_page
 from PIL import Image
 import streamlit_chat
@@ -17,13 +17,20 @@ try:
 except ImportError:
     print("Websockets package not found. Make sure it's installed.")
 
+PORT = 7860     #default port
+URIprefixValue = "lighting-exercise-enhance-gradually"
+
 # For local streaming, the websockets are hosted without ssl - ws://
 HOST = 'localhost:5005'
-URI = f'ws://{HOST}/api/v1/chat-stream'
+#URI = f'ws://{HOST}/api/v1/chat-stream'
 
 # For reverse-proxied streaming, the remote will likely host with ssl - wss://
 # URI = 'wss://your-uri-here.trycloudflare.com/api/v1/stream'
 
+with st.sidebar:
+    URIprefix = st.text_input(label="URI prefix", value=URIprefixValue, key="URIpre", placeholder="Input the URI prefix", help="The URI prefix")    #set uri prefix from textgenUI
+    URI = f'https://{URIprefix}.trycloudflare.com/api/v1/generate'              #add prefix to get complete URI
+    temp = st.number_input("Temperature", value=0.1, help="Default 0.1")        #set low to get deterministic results
 
 async def run(user_input, history):
     # Note: the selected defaults change from time to time.
