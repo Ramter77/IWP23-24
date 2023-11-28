@@ -10,6 +10,7 @@ import requests
 from streamlit_extras.switch_page_button import switch_page
 from PIL import Image
 import streamlit_chat
+from audiorecorder import audiorecorder
 
 try:
     import websockets
@@ -26,10 +27,95 @@ HOST = 'localhost:5005'
 # For reverse-proxied streaming, the remote will likely host with ssl - wss://
 # URI = 'wss://your-uri-here.trycloudflare.com/api/v1/stream'
 
+#UI
+title = "Petname"
+subtitle = "Daily motivational text"
+
+st.set_page_config(
+    page_title="Test",
+    page_icon="👋",
+    initial_sidebar_state="collapsed"
+)
+
 with st.sidebar:
     URIprefix = st.text_input(label="URI prefix", value=URIprefixValue, key="URIpre", placeholder="Input the URI prefix", help="The URI prefix")    #set uri prefix from textgenUI
     URI = f'wss://{URIprefix}.trycloudflare.com/api/v1/chat-stream'              #add prefix to get complete URI
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")        #set low to get deterministic results
+
+def header():
+    with st.container():
+        col1, col2 = st.columns([0.9, 0.1])
+        with col1:
+            st.title(title)
+            st.subheader(subtitle)
+        with col2:
+            st.image("pet.png", width=64)
+            st.image("currency.png", width=64)
+        stickHeader()
+
+def footer():
+    images = []
+    for file in ["task.png", "home.png", "quests.png", "diary.png", "share.png"]:
+        with open(file, "rb") as image:
+            encoded = base64.b64encode(image.read()).decode()
+            images.append(f"data:image/jpeg;base64,{encoded}")
+
+    with st.container():
+        clicked = clickable_images(
+            images,
+            #titles=[f"Image #{str(i)}" for i in range(2)],
+            titles=["Tasks", "Home", "Quests", "Diary", "Share"],
+            div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap", "cursor": "pointer"},
+            img_style={"margin": "5px", "width": "15.5%"},
+            #img_style={"margin": "5px", "height": "200px"},
+        )
+
+        #print(clicked)
+        if (clicked == 2):
+            switch_page("Quests")
+
+        audioRecord()
+        stickFooter()
+
+def audioRecord():  #AUDIO RECORDING
+    audio = audiorecorder("Click to record audio", "Click to stop recording")
+    if len(audio) > 0:
+        st.audio(audio.export().read())     # To play audio in frontend:
+
+def stickHeader():
+    # make header sticky.
+    st.markdown(
+        """
+            <div class='fixed-header'/>
+            <style>
+                div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {
+                    position: sticky;
+                    top: 2.875rem;
+                    text-color: white;
+                    z-index: 999;
+                }
+            </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+def stickFooter():
+    # make footer sticky.
+    st.markdown(
+        """
+            <div class='fixed-footer'/>
+            <style>
+                div[data-testid="stVerticalBlock"] div:has(div.fixed-footer) {
+                    position: sticky;
+                    bottom: 15%;
+                    top: 28%;
+                    text-color: white;
+                    z-index: 999;
+                }
+            </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 async def run(user_input, history):
     # Note: the selected defaults change from time to time.
@@ -37,7 +123,7 @@ async def run(user_input, history):
         'user_input': user_input,
         'history': history,
         'mode': 'chat',  # Valid options: 'chat', 'chat-instruct', 'instruct'
-        'character': 'Bob',
+        'character': 'Petname',
         'instruction_template': 'WizardLM',
         'your_name': 'You',
 
@@ -219,9 +305,10 @@ def chat2():
     #    streamlit_chat.message("Hi. I'm your friendly streamlit ChatGPT assistant.",key='intro_message_1')
     #    streamlit_chat.message("To get started, enter a random userid in the left sidebar.",key='intro_message_2')
 
-
 def userid_change():
     st.session_state.userid = st.session_state.userid_input
 
 if __name__ == '__main__':
+    header()
     chat2()
+    footer()
