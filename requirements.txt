@@ -1,3 +1,5 @@
+pyaudio
+audiorecorder
 streamlit
 st_click_detector
 st_clickable_images
