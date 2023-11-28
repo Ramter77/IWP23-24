@@ -10,7 +10,7 @@ import requests
 from streamlit_extras.switch_page_button import switch_page
 from PIL import Image
 import streamlit_chat
-from audiorecorder import audiorecorder
+import audiorecorder
 
 try:
     import websockets
@@ -177,7 +177,7 @@ async def run(user_input, history):
 async def print_response_stream(user_input, history):
     element = st.empty()
 
-    print("PRINTING")
+    #print("PRINTING")
     cur_len = 0
     mess1 = []
     oldText = ''
