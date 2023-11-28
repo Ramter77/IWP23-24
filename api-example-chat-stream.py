@@ -17,7 +17,7 @@ except ImportError:
     print("Websockets package not found. Make sure it's installed.")
 
 PORT = 7860     #default port
-URIprefixValue = "lighting-exercise-enhance-gradually"
+URIprefixValue = "briefing-coordinated-assists-achieving"
 
 # For local streaming, the websockets are hosted without ssl - ws://
 HOST = 'localhost:5005'
@@ -37,43 +37,42 @@ async def run(user_input, history):
         'user_input': user_input,
         'history': history,
         'mode': 'chat',  # Valid options: 'chat', 'chat-instruct', 'instruct'
-        'character': 'Example',
-        'instruction_template': 'Vicuna-v1.1',
+        'character': 'Bob',
+        'instruction_template': 'WizardLM',
         'your_name': 'You',
 
         'regenerate': False,
         '_continue': False,
-        'stop_at_newline': False,
-        'chat_prompt_size': 2048,
-        'chat_generation_attempts': 1,
-        'chat-instruct_command': 'Continue the chat dialogue below. Write a single reply for the character "<|character|>".\n\n<|prompt|>',
-
-        'max_new_tokens': 250,
-        'do_sample': True,
-        'temperature': 0.7,
-        'top_p': 0.1,
-        'typical_p': 1,
-        'epsilon_cutoff': 0,  # In units of 1e-4
-        'eta_cutoff': 0,  # In units of 1e-4
-        'tfs': 1,
-        'top_a': 0,
-        'repetition_penalty': 1.18,
-        'top_k': 40,
-        'min_length': 0,
-        'no_repeat_ngram_size': 0,
-        'num_beams': 1,
-        'penalty_alpha': 0,
-        'length_penalty': 1,
-        'early_stopping': False,
-        'mirostat_mode': 0,
-        'mirostat_tau': 5,
-        'mirostat_eta': 0.1,
-        'seed': -1,
-        'add_bos_token': True,
-        'truncation_length': 2048,
-        'ban_eos_token': False,
-        'skip_special_tokens': True,
-        'stopping_strings': []
+        #'stop_at_newline': False,
+        #'chat_prompt_size': 2048,
+        #'chat_generation_attempts': 1,
+        #'chat-instruct_command': 'Continue the chat dialogue below. Write a single reply for the character "<|character|>".\n\n<|prompt|>',
+        #'max_new_tokens': 250,
+        #'do_sample': True,
+        #'temperature': 1,
+        #'top_p': 0.1,
+        #'typical_p': 1,
+        #'epsilon_cutoff': 0,  # In units of 1e-4
+        #'eta_cutoff': 0,  # In units of 1e-4
+        #'tfs': 1,
+        #'top_a': 0,
+        #'repetition_penalty': 1.18,
+        #'top_k': 40,
+        #'min_length': 0,
+        #'no_repeat_ngram_size': 0,
+        #'num_beams': 1,
+        #'penalty_alpha': 0,
+        #'length_penalty': 1,
+        #'early_stopping': False,
+        #'mirostat_mode': 0,
+        #'mirostat_tau': 5,
+        #'mirostat_eta': 0.1,
+        #'seed': 1,
+        #'add_bos_token': True,
+        #'truncation_length': 2048,
+        #'ban_eos_token': False,
+        #'skip_special_tokens': True,
+        #'stopping_strings': []
     }
 
     async with websockets.connect(URI, ping_interval=None) as websocket:
@@ -109,7 +108,10 @@ async def print_response_stream(user_input, history):
 
         oldText += (mess)
         #element.chat_message(oldText)
-        element.write(oldText)        
+        element.write(oldText)
+    
+    element.empty()
+    return oldText
 
 # be sure to end each prompt string with a comma.
 example_user_prompts = [
@@ -132,6 +134,11 @@ def move_focus():
         """,
     )
 
+async def testt(history):
+    result = await print_response_stream(st.session_state.messages[-1]['content'], history)
+    return result
+            
+
 def complete_messages(nbegin,nend,stream=True):
     messages = [
                 {"role": m["role"], "content": m["content"]}
@@ -140,15 +147,12 @@ def complete_messages(nbegin,nend,stream=True):
     with st.spinner(f"Waiting for {nbegin}/{nend} responses..."):
         if stream:
             #user_input = "Please give me a step-by-step guide on how to plant a tree in my backyard."
-
-            history = {'internal': [], 'visible': []}
             responses = []
 
-
-
-            
-            
-            asyncio.run(print_response_stream(st.session_state.messages[-1]['content'], history))
+            history = {'internal': [], 'visible': []}
+            responses = asyncio.run(testt(history))
+            print("zsddddddddddddddddddddddddddddddddddddddddd")
+            print(responses)
             response_content = "".join(responses)
         else:
             #response = openai.ChatCompletion.create(
@@ -169,8 +173,8 @@ def complete_messages(nbegin,nend,stream=True):
     return response_content
 
 def chat2():
-    if "openai_model" not in st.session_state:
-        st.session_state["openai_model"] = "gpt-3.5-turbo"
+    #if "openai_model" not in st.session_state:
+    #    st.session_state["openai_model"] = "gpt-3.5-turbo"
 
     if "messages" not in st.session_state:
         st.session_state.messages = []
@@ -201,11 +205,13 @@ def chat2():
 
     if user_content := st.chat_input("Start typing..."): # using streamlit's st.chat_input because it stays put at bottom, chat.openai.com style.
             nkey = int(len(st.session_state.messages)/2)
-            streamlit_chat.message(user_content, is_user=True, key='chat_messages_user_'+str(nkey))
             st.session_state.messages.append({"role": "user", "content": user_content})
+            streamlit_chat.message(user_content, is_user=True, key='chat_messages_user_'+str(nkey))
+            
             assistant_content = complete_messages(0,1)
-            #streamlit_chat.message(assistant_content, key='chat_messages_assistant_'+str(nkey))
             st.session_state.messages.append({"role": "assistant", "content": assistant_content})
+            streamlit_chat.message(assistant_content, key='chat_messages_assistant_'+str(nkey))
+            
             #len(st.session_state.messages)
     #else:
     #    st.sidebar.text_input(
