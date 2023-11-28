@@ -10,7 +10,7 @@ import requests
 from streamlit_extras.switch_page_button import switch_page
 from PIL import Image
 import streamlit_chat
-from audiorecorder import audiorecorder
+from audio_recorder_streamlit import audio_recorder
 
 try:
     import websockets
@@ -78,7 +78,7 @@ def footer():
         stickFooter()
 
 def audioRecord():  #AUDIO RECORDING
-    audio = audiorecorder("Click to record audio", "Click to stop recording")
+    audio = audio_recorder("Click to record audio", "Click to stop recording")
     if len(audio) > 0:
         st.audio(audio.export().read())     # To play audio in frontend:
 
