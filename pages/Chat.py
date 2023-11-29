@@ -236,19 +236,54 @@ def stickHeader():
         unsafe_allow_html=True
     )
 
+@st.cache_data()
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_png_as_page_bg(png_file):
+    bin_str = get_base64_of_bin_file(png_file)
+    page_bg_img = '''
+    <style>
+    .stApp {
+    background-image: url("data:image/png;base64,%s");
+    background-size: cover;
+    }
+    </style>
+    ''' % bin_str
+    
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+    return
+
 def header():
     with st.container():
+        st.markdown(
+            """
+            <style>
+            .st-emotion-cache-1y4p8pa {
+                padding: 0;
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-top: 15px;
+                padding-bottom: 120px;
+            }
+            </style>
+            """,
+            unsafe_allow_html=True
+        )
+
         images1 = []
-        with open("menu.png", "rb") as image:
+        with open("x.png", "rb") as image:
             encoded = base64.b64encode(image.read()).decode()
             images1.append(f"data:image/jpeg;base64,{encoded}")
 
         clicked = clickable_images(
             images1,
             #titles=[f"Image #{str(i)}" for i in range(2)],
-            titles=["Tasks", "Home", "Quests", "Diary", "Share"],
-            div_style={"display": "flex", "justify-content": "right", "flex-wrap": "wrap", "cursor": "pointer"},
-            img_style={"width": "64px"},
+            titles=["Back"],
+            div_style={"display": "flex", "justify-content": "right", "heigth": "64px", "flex-wrap": "wrap", "cursor": "pointer"},
+            img_style={"width": "64px", "heigth": "64px"},
             #img_style={"margin": "5px", "width": "15.5%"},
             #img_style={"margin": "5px", "height": "200px"},
         )
@@ -262,5 +297,6 @@ def userid_change():
     st.session_state.userid = st.session_state.userid_input
 
 if __name__ == '__main__':
+    set_png_as_page_bg('chatBG.png')
     header()
     chat2()

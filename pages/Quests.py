@@ -82,6 +82,12 @@ def quests():
         st.markdown(
             """
             <style>
+            .st-emotion-cache-1y4p8pa {
+                padding: 0;
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-top: 15px;
+            }
             .container {
                 display: flex;
                 padding-bottom: 0px;
@@ -114,6 +120,7 @@ def quests():
                 height: 56px;
                 float:right;
                 right: 0;
+                margin-top: 20px;
             }
             .logo-img1 {
                 width: 32px;
@@ -153,7 +160,7 @@ def quests():
                 <div class="container">
                     <div class="cont">
                         <p class="logo-text1">Quest {i+1} summary: Summary of Quest number {i+1}</p>
-                        <p class="logo-text2">Quest {i+1} description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                        <p class="logo-text2">Quest {i+1} description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                     </div>
                     <img class="logo-img1" src="data:image/png;base64,{base64.b64encode(open("acceptQuest.png", "rb").read()).decode()}">
                 </div>
@@ -161,9 +168,30 @@ def quests():
                 unsafe_allow_html=True
             )
 
+@st.cache_data()
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_png_as_page_bg(png_file):
+    bin_str = get_base64_of_bin_file(png_file)
+    page_bg_img = '''
+    <style>
+    .stApp {
+    background-image: url("data:image/png;base64,%s");
+    background-size: cover;
+    }
+    </style>
+    ''' % bin_str
+    
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+    return
+
 def main():  
     quests()
     footer()
 
 if __name__ == '__main__':
+    set_png_as_page_bg('homeBG.png')
     main()

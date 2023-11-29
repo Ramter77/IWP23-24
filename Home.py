@@ -25,7 +25,15 @@ def header():
         st.markdown(
             """
             <style>
+            .st-emotion-cache-1y4p8pa {
+                padding: 0;
+                padding-right: 10px;
+                padding-left: 10px;
+                padding-top: 15px;
+            }
             .container {
+                height: 50px;
+                background: none;
                 display: flex;
                 padding-bottom: 0px;
                 margin-bottom: 0px;
@@ -34,12 +42,14 @@ def header():
                 font-weight:700 !important;
                 font-size:50px !important;
                 color: #f9a01b !important;
-                width: 50%;
+                width: 100%;
+                margin-bottom: 0%;
             }
             .logo-img {
-                width: 64px;
-                height: 64px;
-                margin-left: 15%;
+                width: 40px;
+                height: 40px;
+                margin-top: 20px;
+                margin-left: 2%;
                 float:right;
             }
             </style>
@@ -77,7 +87,7 @@ def footer():
             images,
             #titles=[f"Image #{str(i)}" for i in range(2)],
             titles=["Tasks", "Home", "Quests", "Diary", "Share"],
-            div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap", "cursor": "pointer"},
+            div_style={"display": "flex", "background": "none", "justify-content": "center", "flex-wrap": "wrap", "cursor": "pointer"},
             img_style={"width": "15.5%"},
             #img_style={"margin": "5px", "width": "15.5%"},
             #img_style={"margin": "5px", "height": "200px"},
@@ -112,7 +122,7 @@ def stickHeader():
             <style>
                 div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {
                     position: sticky;
-                    top: 2.875rem;
+                    top: 0rem;
                     text-color: white;
                     z-index: 999;
                 }
@@ -139,10 +149,31 @@ def stickFooter():
         unsafe_allow_html=True
     )
 
+@st.cache_data()
+def get_base64_of_bin_file(bin_file):
+    with open(bin_file, 'rb') as f:
+        data = f.read()
+    return base64.b64encode(data).decode()
+
+def set_png_as_page_bg(png_file):
+    bin_str = get_base64_of_bin_file(png_file)
+    page_bg_img = '''
+    <style>
+    .stApp {
+    background-image: url("data:image/png;base64,%s");
+    background-size: cover;
+    }
+    </style>
+    ''' % bin_str
+    
+    st.markdown(page_bg_img, unsafe_allow_html=True)
+    return
+
 def main(): 
     header()
-    st.image("https://www.bwillcreative.com/wp-content/uploads/2020/05/portrait-orientation-zion-national-park.jpg")
+    st.image("room.png", use_column_width="always")
     footer()
 
 if __name__ == '__main__':
+    set_png_as_page_bg('homeBG.png')
     main()
