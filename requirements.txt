@@ -1,3 +1,5 @@
+sseclient
+requests
 pyaudio
 streamlit
 st_click_detector
@@ -5,7 +7,6 @@ st_clickable_images
 streamlit_extras
 streamlit_chat
 audio-recorder-streamlit
-websockets
 
 
 
