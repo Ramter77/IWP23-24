@@ -85,37 +85,27 @@ def footer():
     with st.container():
         clicked = clickable_images(
             images,
-            #titles=[f"Image #{str(i)}" for i in range(2)],
             titles=["Tasks", "Home", "Quests", "Diary", "Share"],
             div_style={"display": "flex", "background": "none", "justify-content": "center", "flex-wrap": "wrap", "cursor": "pointer"},
             img_style={"width": "15.5%"},
-            #img_style={"margin": "5px", "width": "15.5%"},
-            #img_style={"margin": "5px", "height": "200px"},
         )
 
-        #print(clicked)
         if (clicked == 2):
             switch_page("Quests")
 
         clicked1 = clickable_images(
             images1,
-            #titles=[f"Image #{str(i)}" for i in range(2)],
             titles=["Chat"],
             div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap", "cursor": "pointer"},
             img_style={"width": "100%"},
-            #img_style={"margin": "5px", "width": "100%"},
-            #img_style={"margin": "5px", "height": "200px"},
         )
-        #print(clicked1)
+
         if (clicked1 == 0):
             switch_page("Chat")
-        #st.image("chatbox.png")
 
-        #audioRecord()
         stickFooter()
 
 def stickHeader():
-    # make header sticky.
     st.markdown(
         """
             <div class='fixed-header'/>
@@ -123,7 +113,6 @@ def stickHeader():
                 div[data-testid="stVerticalBlock"] div:has(div.fixed-header) {
                     position: sticky;
                     top: 0rem;
-                    text-color: white;
                     z-index: 999;
                 }
             </style>
@@ -132,7 +121,6 @@ def stickHeader():
     )
 
 def stickFooter():
-    # make footer sticky.
     st.markdown(
         """
             <div class='fixed-footer'/>
@@ -141,7 +129,6 @@ def stickFooter():
                     position: sticky;
                     bottom: 0%;
                     top: 28%;
-                    text-color: white;
                     z-index: 999;
                 }
             </style>

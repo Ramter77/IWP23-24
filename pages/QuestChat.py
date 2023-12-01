@@ -19,7 +19,7 @@ HOST = 'localhost:5005'
 URIprefixValue = "h-textbook-rpm-vegetation"
 
 st.set_page_config(
-    page_title="Chat",
+    page_title="QuestChat",
     page_icon="👋",
     initial_sidebar_state="collapsed",
     #layout='wide'
@@ -42,7 +42,7 @@ async def run(user_input, history, stream):
         'stream': stream,
         'messages': history,
         'character': 'Petname',
-        ##'instruction_template': 'WizardLM',
+        'instruction_template': 'OpenChat',
         ##'your_name': 'You',
 
         ##'regenerate': False,
@@ -98,6 +98,8 @@ async def run(user_input, history, stream):
 
     element.empty()
     #history.append({"role": "assistant", "content": assistant_message})
+
+    streamlit_chat.message(assistant_message)
 
     print()
     print("+++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -262,10 +264,26 @@ def header():
 
         stickHeader()
 
+testPrompt = "I want you to act as a very simple text based adventure game with financial context for a target audience with minor cognitive impairments. Respond with a short and simple description of the environment and then ask me a short and simple question that can only be answered with yes or no. My first scenario is: “buy a hat”"
+
 def main():
     set_png_as_page_bg('chatBG.png')
     header()
-    chat()
+
+    if st.button("Start Quest", use_container_width=True, type='primary'):
+        asyncio.run(run(testPrompt, [], True))
+
+    col1, col2 = st.columns(2)
+    ans = ''
+    with col1:
+        if st.button("Yes", use_container_width=True, type='primary'):
+            ans = "Yes"
+    with col2:
+        if st.button("No", use_container_width=True, type='secondary'):
+            ans = "No"
+
+    if (ans == "Yes" or ans == "No"):
+        asyncio.run(run(ans, [], True))
 
 if __name__ == '__main__':
     main()    

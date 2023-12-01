@@ -1,20 +1,15 @@
 import base64
-import json
-from pathlib import Path
+import os
+
 import streamlit as st
-from st_click_detector import click_detector
 from st_clickable_images import clickable_images
-import requests
 from streamlit_extras.switch_page_button import switch_page
-from PIL import Image
-import streamlit_chat
 
 st.set_page_config(
     page_title="Quests",
     page_icon="😎",
     initial_sidebar_state="collapsed"
 )
-#st.sidebar.success("Select a demo above.")
 
 def footer():
     images = []
@@ -154,25 +149,31 @@ def quests():
 
         questAmount = 5
         for i in range(questAmount):
-            st.markdown(
-                f"""
-                <hr class="rounded">
-                <div class="container">
-                    <div class="cont">
-                        <p class="logo-text1">Quest {i+1} summary: Summary of Quest number {i+1}</p>
-                        <p class="logo-text2">Quest {i+1} description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-                    </div>
-                    <img class="logo-img1" src="data:image/png;base64,{base64.b64encode(open("acceptQuest.png", "rb").read()).decode()}">
-                </div>
-                """,
-                unsafe_allow_html=True
-            )
+            gif_html = get_img_with_href('acceptQuest.png', '/Home')
+            st.markdown(gif_html, unsafe_allow_html=True)
 
 @st.cache_data()
 def get_base64_of_bin_file(bin_file):
     with open(bin_file, 'rb') as f:
         data = f.read()
     return base64.b64encode(data).decode()
+
+@st.cache_data()
+def get_img_with_href(local_img_path, target_url):
+    img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
+    bin_str = get_base64_of_bin_file(local_img_path)
+    html_code = f'''
+        <hr class="rounded">
+        <div class="container">
+            <div class="cont">
+                <p class="logo-text1">Quest summary: Summary of Quest</p>
+                <p class="logo-text2">Quest description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+            </div>
+            <a href="{target_url}">
+            <img width="56px" heigth="56px" float="right" right="0" src="data:image/{img_format};base64,{bin_str}" />
+        </a>
+        </div>'''
+    return html_code
 
 def set_png_as_page_bg(png_file):
     bin_str = get_base64_of_bin_file(png_file)
@@ -188,10 +189,10 @@ def set_png_as_page_bg(png_file):
     st.markdown(page_bg_img, unsafe_allow_html=True)
     return
 
-def main():  
+def main(): 
+    set_png_as_page_bg('homeBG.png') 
     quests()
     footer()
 
 if __name__ == '__main__':
-    set_png_as_page_bg('homeBG.png')
     main()
