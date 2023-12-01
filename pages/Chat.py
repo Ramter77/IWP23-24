@@ -31,6 +31,10 @@ with st.sidebar:
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
 
 async def run(user_input, history, stream):
+    r = requests.request('GET','https://www.google.es/')
+    print(r)
+
+
     st.write("RUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUN")
     print("RUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUN")
     history.append({"role": "user", "content": user_input})
