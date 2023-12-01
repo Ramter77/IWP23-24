@@ -34,6 +34,10 @@ async def run(user_input, history, stream):
     r = requests.request('GET','https://www.google.es/')
     print(r)
 
+    responser = requests.get("https://www.google.es/", verify=False)
+    print(responser)
+    print("||||||||||||||||||||||||||||||||||||||||||||||||||")
+
 
     st.write("RUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUN")
     print("RUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUN")
