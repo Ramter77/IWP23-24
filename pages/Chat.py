@@ -16,7 +16,7 @@ HOST = 'localhost:5005'
 
 # For reverse-proxied streaming, the remote will likely host with ssl - wss://
 # URI = 'wss://your-uri-here.trycloudflare.com/api/v1/stream'
-URIprefixValue = "h-textbook-rpm-vegetation"
+URIprefixValue = "begin-dan-narrative-portugal"
 
 st.set_page_config(
     page_title="Chat",
@@ -27,7 +27,7 @@ st.set_page_config(
 
 with st.sidebar:
     URIprefix = st.text_input(label="URI prefix", value=URIprefixValue, key="URIpre", placeholder="Input the URI prefix", help="The URI prefix")    #set uri prefix from textgenUI
-    URI = f'https://{URIprefix}.trycloudflare.com/v1/chat/completions'     #add prefix to get complete URI
+    URI = f'http://{URIprefix}.trycloudflare.com/v1/chat/completions'     #add prefix to get complete URI
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
 
 async def run(user_input, history, stream):
@@ -82,7 +82,6 @@ async def run(user_input, history, stream):
     stream_response = requests.post(URI, headers=headers, json=data, verify=False, stream=True)
     client = sseclient.SSEClient(stream_response)
 
-    #print(stream_response)
     if str(stream_response) != "<Response [200]>":
         st.error("Server down or not set correct URI")
 
