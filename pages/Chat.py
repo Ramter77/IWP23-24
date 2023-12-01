@@ -47,7 +47,7 @@ async def run(user_input, history, stream):
         "Content-Type": "application/json"
     }
     
-    data1 = {
+    data = {
         'mode': 'instruct',
         'stream': stream,
         'messages': history,
@@ -89,16 +89,10 @@ async def run(user_input, history, stream):
         #'stopping_strings': []
     }
 
-    data = {
-        "mode": "chat",
-        "character": "Example",
-        "messages": []
-    }
+    #stream_r = requests.post(URI, headers=headers, json=data, verify=False, stream=False)
+    #print(stream_r)
 
-    stream_r = requests.post(URI, headers=headers, json=data, verify=False, stream=False)
-    print(stream_r)
-
-    print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
+    #print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
 
     stream_response = requests.post(URI, headers=headers, json=data, verify=False, stream=True)
     print(stream_response.text)
