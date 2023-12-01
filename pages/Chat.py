@@ -31,12 +31,12 @@ with st.sidebar:
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
 
 async def run(user_input, history, stream):
-    r = requests.request('GET','https://www.google.es/', verify=False)
-    print(r)
+    #r = requests.request('GET','https://www.google.es/', verify=False)
+    #print(r)
 
-    responser = requests.get("https://www.google.com/", verify=False)
-    print(responser)
-    print("||||||||||||||||||||||||||||||||||||||||||||||||||")
+    #responser = requests.get("https://www.google.com/", verify=False)
+    #print(responser)
+    #print("||||||||||||||||||||||||||||||||||||||||||||||||||")
 
 
     st.write("RUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUN")
@@ -47,7 +47,7 @@ async def run(user_input, history, stream):
         "Content-Type": "application/json"
     }
     
-    data = {
+    data1 = {
         'mode': 'instruct',
         'stream': stream,
         'messages': history,
@@ -88,6 +88,17 @@ async def run(user_input, history, stream):
         #'skip_special_tokens': True,
         #'stopping_strings': []
     }
+
+    data = {
+        "mode": "chat",
+        "character": "Example",
+        "messages": []
+    }
+
+    stream_r = requests.post(URI, headers=headers, json=data, verify=False, stream=False)
+    print(stream_r)
+
+    print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
 
     stream_response = requests.post(URI, headers=headers, json=data, verify=False, stream=True)
     print(stream_response.text)
