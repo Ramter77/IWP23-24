@@ -31,6 +31,7 @@ with st.sidebar:
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
 
 async def run(user_input, history, stream):
+    print("RUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUN")
     history.append({"role": "user", "content": user_input})
 
     headers = {
@@ -80,6 +81,8 @@ async def run(user_input, history, stream):
     }
 
     stream_response = requests.post(URI, headers=headers, json=data, verify=False, stream=True)
+
+    print("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIENT")
     client = sseclient.SSEClient(stream_response)
 
     if str(stream_response) != "<Response [200]>":
