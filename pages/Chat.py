@@ -31,10 +31,10 @@ with st.sidebar:
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
 
 async def run(user_input, history, stream):
-    r = requests.request('GET','https://www.google.es/')
+    r = requests.request('GET','https://www.google.es/', verify=False)
     print(r)
 
-    responser = requests.get("https://www.google.es/", verify=False)
+    responser = requests.get("https://www.google.com/", verify=False)
     print(responser)
     print("||||||||||||||||||||||||||||||||||||||||||||||||||")
 
@@ -90,13 +90,15 @@ async def run(user_input, history, stream):
     }
 
     stream_response = requests.post(URI, headers=headers, json=data, verify=False, stream=True)
+    print(stream_response.text)
+    if str(stream_response) != "<Response [200]>":
+        st.error("Server down or not set correct URI")
 
     st.write("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIENT")
     print("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIENT")
     client = sseclient.SSEClient(stream_response)
 
-    if str(stream_response) != "<Response [200]>":
-        st.error("Server down or not set correct URI")
+    
 
     element = st.empty()
     assistant_message = ''
