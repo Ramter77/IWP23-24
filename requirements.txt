@@ -1,4 +1,4 @@
-sseclient
+sseclient-py
 urllib3
 six==1.15.0
 requests
