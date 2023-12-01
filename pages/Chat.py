@@ -107,8 +107,11 @@ async def run(user_input, history, stream):
 
     st.write("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIENT")
     print("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIENT")
-    client = sseclient.SSEClient(stream_response)
 
+
+    client = sseclient.SSEClient(stream_response)
+    st.write("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIENT")
+    print("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
     
 
     element = st.empty()
