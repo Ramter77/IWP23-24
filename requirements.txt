@@ -1,4 +1,5 @@
 sseclient
+urllib3
 requests
 pyaudio
 streamlit
