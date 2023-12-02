@@ -16,7 +16,7 @@ HOST = 'localhost:5005'
 
 # For reverse-proxied streaming, the remote will likely host with ssl - wss://
 # URI = 'wss://your-uri-here.trycloudflare.com/api/v1/stream'
-URIprefixValue = "begin-dan-narrative-portugal"
+URIprefixValue = "connect-eden-beverage-strips"
 
 st.set_page_config(
     page_title="Chat",
@@ -31,16 +31,6 @@ with st.sidebar:
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
 
 async def run(user_input, history, stream):
-    #r = requests.request('GET','https://www.google.es/', verify=False)
-    #print(r)
-
-    #responser = requests.get("https://www.google.com/", verify=False)
-    #print(responser)
-    #print("||||||||||||||||||||||||||||||||||||||||||||||||||")
-
-
-    st.write("RUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUN")
-    print("RUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUUN")
     history.append({"role": "user", "content": user_input})
 
     headers = {
@@ -89,25 +79,12 @@ async def run(user_input, history, stream):
         #'stopping_strings': []
     }
 
-    #stream_r = requests.post(URI, headers=headers, json=data, verify=False, stream=False)
-    #print(stream_r)
-
-    #print("TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT")
-
     stream_response = requests.post(URI, headers=headers, json=data, verify=False, stream=True)
-    print(stream_response.text)
     if str(stream_response) != "<Response [200]>":
         st.error("Server down or not set correct URI")
 
-    st.write("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIENT")
-    print("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIENT")
-
-
     client = sseclient.SSEClient(stream_response)
-    st.write("CLIIIIIIIIIIIIIIIIIIIIIIIIIIIIIENT")
-    print("ERRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR")
     
-
     element = st.empty()
     assistant_message = ''
     for event in client.events():
@@ -154,7 +131,7 @@ def complete_messages(nbegin,nend,stream=True):
             ]
     with st.spinner(f"Waiting for {nbegin}/{nend} responses..."):
         if stream:
-            response_content = asyncio.run(run(st.session_state.messages[-1]['content'], messages, True))
+            response_content = asyncio.run(run(st.session_state.messages[-1]['content'], messages, stream))
             print(response_content)
         else:
             #response = openai.ChatCompletion.create(
@@ -166,7 +143,7 @@ def complete_messages(nbegin,nend,stream=True):
             #    stream=False,
             #)
             #response_content = response.choices[0]['message'].get("content","")
-            response_content = asyncio.run(run(st.session_state.messages[-1]['content'], messages, False))
+            response_content = asyncio.run(run(st.session_state.messages[-1]['content'], messages, stream))
             print(response_content)
     return response_content
 
