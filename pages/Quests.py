@@ -149,7 +149,7 @@ def quests():
 
         questAmount = 5
         for i in range(questAmount):
-            gif_html = get_img_with_href('acceptQuest.png', '/Home')
+            gif_html = get_img_with_href('acceptQuest.png', '/QuestChat')
             st.markdown(gif_html, unsafe_allow_html=True)
 
 @st.cache_data()
@@ -170,8 +170,8 @@ def get_img_with_href(local_img_path, target_url):
                 <p class="logo-text2">Quest description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             </div>
             <a href="{target_url}">
-            <img width="56px" heigth="56px" float="right" right="0" src="data:image/{img_format};base64,{bin_str}" />
-        </a>
+                <img width="56px" heigth="56px" float="right" right="0" src="data:image/{img_format};base64,{bin_str}" />
+            </a>
         </div>'''
     return html_code
 
