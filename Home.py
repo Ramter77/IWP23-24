@@ -86,7 +86,7 @@ def footer():
         clicked = clickable_images(
             images,
             titles=["Tasks", "Home", "Quests", "Diary", "Share"],
-            div_style={"display": "flex", "background": "none", "justify-content": "center", "flex-wrap": "wrap", "cursor": "pointer"},
+            div_style={"display": "flex", "background-color": "transparent", "justify-content": "center", "flex-wrap": "wrap", "cursor": "pointer"},
             img_style={"width": "15.5%"},
         )
 
