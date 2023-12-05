@@ -1,6 +1,7 @@
 sseclient-py
 urllib3
 six==1.15.0
+gTTS
 requests
 pyaudio
 streamlit
