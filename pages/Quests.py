@@ -2,7 +2,6 @@ import base64
 import os
 
 import streamlit as st
-from st_clickable_images import clickable_images
 from streamlit_extras.switch_page_button import switch_page
 
 st.set_page_config(
@@ -25,7 +24,6 @@ def footer():
         stickFooter()
 
 def stickFooter():
-    # make footer sticky.
     st.markdown(
         """
             <div class='fixed-footer'/>
@@ -116,9 +114,12 @@ def quests():
             unsafe_allow_html=True
         )
 
+        summ = ["Hat quest", "Quest summary: Summary of Quest", "Quest summary: Summary of Quest", "Quest summary: Summary of Quest", "Quest summary: Summary of Quest"]
+        desc = ["Hat store quest", "Quest description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "Quest description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "Quest description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.", "Quest description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."]
+        link = ["/QuestChat", "/Home", "/Home", "/Home", "/Home", "/Home"]
         questAmount = 5
         for i in range(questAmount):
-            gif_html = get_img_with_href('acceptQuest.png', '/QuestChat')
+            gif_html = get_img_with_href('acceptQuest.png', link[i], summ[i], desc[i])
             st.markdown(gif_html, unsafe_allow_html=True)
 
 @st.cache_data()
@@ -137,30 +138,30 @@ def get_footer():
     chatbox = os.path.splitext('chatbox.png')[-1].replace('.', '')
     chatbox_bin_str = get_base64_of_bin_file('chatbox.png')
 
-    marginLeftRight = "10px"
+    widthHeigth = "48px"
+    bigWidthHeigth = "60px"
+    marginLeftRight = "10%"
     html_code = f'''
-        <div class="container">
-            <div class="cont" style="display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;">
-                <a target="_self" href="{'/Home'}">
-                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{task};base64,{task_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Home'}">
-                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{home};base64,{home_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Quests'}">
-                    <img width="64px" heigth="64px" style="margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{quests};base64,{quests_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Home'}">
-                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{diary};base64,{diary_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Home'}">
-                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{share};base64,{share_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Chat'}">
-                    <img width="100%" heigth="56px" style="margin-top:10px; margin-bottom:10px;" src="data:image/{chatbox};base64,{chatbox_bin_str}" />
-                </a>
-            </div>
-        </div>'''
+        <div class="cont" style="display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;">
+            <a target="_self" href="{'/Home'}">
+                <img width={widthHeigth} heigth={widthHeigth} style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{task};base64,{task_bin_str}" />
+            </a>
+            <a target="_self" href="{'/Home'}">
+                <img width={widthHeigth} heigth={widthHeigth} style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{home};base64,{home_bin_str}" />
+            </a>
+            <a target="_self" href="{'/Quests'}">
+                <img width={bigWidthHeigth} heigth={bigWidthHeigth} style="padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{quests};base64,{quests_bin_str}" />
+            </a>
+            <a target="_self" href="{'/Home'}">
+                <img width={widthHeigth} heigth={widthHeigth} style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{diary};base64,{diary_bin_str}" />
+            </a>
+            <a target="_self" href="{'/Home'}">
+                <img width={widthHeigth} heigth={widthHeigth} style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight}; " src="data:image/{share};base64,{share_bin_str}" />
+            </a>
+        </div>
+        <a target="_self" href="{'/Chat'}" style="display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;">
+            <img width="80%" heigth="10px" style="margin-top:10px; margin-bottom:10px;" src="data:image/{chatbox};base64,{chatbox_bin_str}" />
+        </a>'''
     return html_code
 
 @st.cache_data()
@@ -170,17 +171,17 @@ def get_base64_of_bin_file(bin_file):
     return base64.b64encode(data).decode()
 
 @st.cache_data()
-def get_img_with_href(local_img_path, target_url):
+def get_img_with_href(local_img_path, target_url, summ, desc):
     img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
     bin_str = get_base64_of_bin_file(local_img_path)
     html_code = f'''
         <hr class="rounded">
         <div class="container">
             <div class="cont">
-                <p class="logo-text1">Quest summary: Summary of Quest</p>
-                <p class="logo-text2">Quest description: Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <p class="logo-text1">{summ}</p>
+                <p class="logo-text2">{desc}</p>
             </div>
-            <a href="{target_url}">
+            <a target="_self" href="{target_url}">
                 <img width="56px" heigth="56px" float="right" right="0" src="data:image/{img_format};base64,{bin_str}" />
             </a>
         </div>'''

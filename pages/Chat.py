@@ -1,5 +1,4 @@
 import asyncio
-from email.mime import audio
 import json
 import sys
 import base64
@@ -7,13 +6,10 @@ import requests
 import os
 import sseclient
 from gtts import gTTS
-import time
 from io import BytesIO
-import playsound
 
 import streamlit as st
 import streamlit_chat
-from st_clickable_images import clickable_images
 from streamlit_extras.switch_page_button import switch_page
 
 # For local streaming, the websockets are hosted without ssl - ws://
@@ -189,7 +185,7 @@ def chat():
             st.session_state.messages.append({"role": "assistant", "content": assistant_content})
             streamlit_chat.message(assistant_content, key='chat_messages_assistant_'+str(nkey))
 
-            tts(assistant_content)
+            TTS(assistant_content)
             
             print("-------------------------Messages---------------------")
             print(st.session_state.messages)
@@ -225,9 +221,13 @@ def set_png_as_page_bg(png_file):
     bin_str = get_base64_of_bin_file(png_file)
     page_bg_img = '''
     <style>
+    .chat {
+        background-color: transparent;
+    }
     .stApp {
-    background-image: url("data:image/png;base64,%s");
-    background-size: cover;
+        background-image: url("data:image/png;base64,%s");
+        background-size: cover;
+        background-color: transparent;
     }
     </style>
     ''' % bin_str
@@ -276,12 +276,12 @@ def get_img_with_href():
         </div>'''
     return html_code
 
-def tts(txt):
+@st.cache_data()
+def TTS(txt):
     sound_file = BytesIO()
     tts = gTTS(str(txt), lang='nl')
     tts.write_to_fp(sound_file)
-
-    ss = tts.save('temp.mp3')
+    tts.save('temp.mp3')
 
     # Read the audio file and encode it to base64
     with open('temp.mp3', "rb") as audio_file:
@@ -289,70 +289,11 @@ def tts(txt):
 
     # Use HTML to embed audio with autoplay
     st.markdown(
-        f'<audio autoplay="true" controls><source src="data:audio/mp3;base64,{audio_bytes}" type="audio/mp3"></audio>',
+        f'<audio autoplay="true" controls style="width:100%;">><source src="data:audio/mp3;base64,{audio_bytes}" type="audio/mp3"></audio>',
         unsafe_allow_html=True,
     )
 
     #st.audio(sound_file)
-
-
-
-
-
-
-
-    #playAudio(sound_file)
-    #playsound.playsound(sound_file) 
-
-    #autoplay_audio(sound_file)
-    #st.audio(sound_file)
-def playAudio(sound_file):
-    md = f"""
-        <audio controls autoplay="true">
-        <source src="data:audio/mp3;{sound_file}" type="audio/mp3"/>
-        <source src="data:audio/mp3;base64,{sound_file}" type="audio/mp3">
-        </audio>
-        """
-    st.markdown(
-        md,
-        unsafe_allow_html=True,
-    )
-
-def autoplay_audio(f):
-    b64 = base64.b64encode(f).decode()
-    md = f"""
-        <audio controls autoplay="true">
-        <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-        </audio>
-        """
-    st.markdown(
-        md,
-        unsafe_allow_html=True,
-    )
-
-def autoplay_audio2(file_path: str):
-    with open(file_path, "rb") as f:
-        data = f.read()
-        b64 = base64.b64encode(data).decode()
-        md = f"""
-            <audio controls autoplay="true">
-            <source src="data:audio/mp3;base64,{b64}" type="audio/mp3">
-            </audio>
-            """
-        st.markdown(
-            md,
-            unsafe_allow_html=True,
-        )
-
-def speech( txt ):
-    tts = gTTS(text=txt, lang="nl")
-    print(tts)
-
-
-    testfile = "/tmp/temp.mp3"
-    tts.save(testfile)
-    os.system("mpg123 /tmp/temp.mp3")
-    os.system("rm %s" %(testfile))
 
 def main():
     set_png_as_page_bg('chatBG.png')

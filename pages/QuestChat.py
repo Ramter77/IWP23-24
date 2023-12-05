@@ -5,10 +5,11 @@ import base64
 import requests
 import sseclient
 import os
+from gtts import gTTS
+from io import BytesIO
 
 import streamlit as st
 import streamlit_chat
-from st_clickable_images import clickable_images
 from streamlit_extras.switch_page_button import switch_page
 
 # For local streaming, the websockets are hosted without ssl - ws://
@@ -105,7 +106,8 @@ async def run(user_input, history, stream):
     element.empty()
     history.append({"role": "assistant", "content": assistant_message})
 
-    streamlit_chat.message(assistant_message)
+    #streamlit_chat.message(assistant_message)
+    #tts(assistant_message)
 
     print()
     print("+++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -119,19 +121,6 @@ example_user_prompts = [
     "What makes a good joke?",
     "Tell me a haiku.",
 ]
-
-def move_focus():
-    # inspect the html to determine which control to specify to receive focus (e.g. text or textarea).
-    st.components.v1.html(
-        f"""
-            <script>
-                var textarea = window.parent.document.querySelectorAll("textarea[type=textarea]");
-                for (var i = 0; i < textarea.length; ++i) {{
-                    textarea[i].focus();
-                }}
-            </script>
-        """,
-    )
 
 def complete_messages(nbegin,nend,stream=True):
     messages = [
@@ -168,33 +157,17 @@ def chat():
     #    "Current userid", on_change=userid_change, placeholder=st.session_state.userid, key='userid_input')
     if st.sidebar.button("Clear Conversation", key='clear_chat_button'):
         st.session_state.messages = []
-        move_focus()
-    if st.sidebar.button("Show Example Conversation", key='show_example_conversation'):
-        #st.session_state.messages = [] # don't clear current conversaations?
-        for i,up in enumerate(example_user_prompts):
-            st.session_state.messages.append({"role": "user", "content": up})
-            assistant_content = complete_messages(i,len(example_user_prompts))
-            st.session_state.messages.append({"role": "assistant", "content": assistant_content})
-        move_focus()
+        #move_focus()
     for i,message in enumerate(st.session_state.messages):
         nkey = int(i/2)
         if message["role"] == "user":
-            streamlit_chat.message(message["content"], is_user=True, key='chat_messages_user_'+str(nkey))
+            if i > 0:
+                print("uncomment this")
+                #streamlit_chat.message(message["content"], is_user=True, key='chat_messages_user_'+str(nkey))
         else:
             streamlit_chat.message(message["content"], is_user=False, key='chat_messages_assistant_'+str(nkey))
-
-    if user_content := st.chat_input("Start typing..."): # using streamlit's st.chat_input because it stays put at bottom, chat.openai.com style.
-            nkey = int(len(st.session_state.messages)/2)
-            st.session_state.messages.append({"role": "user", "content": user_content})
-            streamlit_chat.message(user_content, is_user=True, key='chat_messages_user_'+str(nkey))
-            
-            assistant_content = complete_messages(0,1)
-            #st.session_state.messages.append({"role": "assistant", "content": assistant_content})
-            streamlit_chat.message(assistant_content, key='chat_messages_assistant_'+str(nkey))
-            
-            print("-------------------------Messages---------------------")
-            print(st.session_state.messages)
-            #len(st.session_state.messages)
+            TTS(message["content"])
+    
     #else:
     #    st.sidebar.text_input(
     #        "Enter a random userid", on_change=userid_change, placeholder='userid', key='userid_input')
@@ -228,8 +201,8 @@ def set_png_as_page_bg(png_file):
     page_bg_img = '''
     <style>
     .stApp {
-    background-image: url("data:image/png;base64,%s");
-    background-size: cover;
+        background-image: url("data:image/png;base64,%s");
+        background-size: cover;
     }
     </style>
     ''' % bin_str
@@ -275,15 +248,23 @@ def get_img_with_href():
     return html_code
 
 @st.cache_data()
-def get_img_with_href2(local_img_path, target_url):
-    img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
-    bin_str = get_base64_of_bin_file(local_img_path)
-    html_code = f"""
-            <a href="{target_url}" style="float:right">
-                <img width="56px" heigth="56px" src="data:image/{img_format};base64,{bin_str}" />
-            </a>
-            """
-    return html_code
+def TTS(txt):
+    sound_file = BytesIO()
+    tts = gTTS(str(txt), lang='nl')
+    tts.write_to_fp(sound_file)
+    tts.save('temp.mp3')
+
+    # Read the audio file and encode it to base64
+    with open('temp.mp3', "rb") as audio_file:
+        audio_bytes = base64.b64encode(audio_file.read()).decode()
+
+    # Use HTML to embed audio with autoplay
+    st.markdown(
+        f'<audio autoplay="true" controls style="width:100%;"><source src="data:audio/mp3;base64,{audio_bytes}" type="audio/mp3"></audio>',
+        unsafe_allow_html=True,
+    )
+
+    #st.audio(sound_file)
 
 testPrompt = "I want you to act as a very simple text based adventure game with financial context for a target audience with minor cognitive impairments. Respond with a short and simple description of the environment and then ask me a short and simple question that can only be answered with yes or no. My first scenario is: “buy a hat”"
 
@@ -301,18 +282,38 @@ def main():
         asyncio.run(run(testPrompt, st.session_state.messages, True))
         #history.append({"role": "assistant", "content": assistant_message})
 
+    chat()
+    
+    with st.container():
+        col1, col2 = st.columns(2)
+        ans = ''
+        with col1:
+            if st.button("Yes", use_container_width=True, type='primary'):
+                ans = "Yes"
+        with col2:
+            if st.button("No", use_container_width=True, type='secondary'):
+                ans = "No"
 
-    col1, col2 = st.columns(2)
-    ans = ''
-    with col1:
-        if st.button("Yes", use_container_width=True, type='primary'):
-            ans = "Yes"
-    with col2:
-        if st.button("No", use_container_width=True, type='secondary'):
-            ans = "No"
+        if (ans == "Yes" or ans == "No"):
+            asyncio.run(run("Continue the text based game. I choose: " + ans, st.session_state.messages, True))
 
-    if (ans == "Yes" or ans == "No"):
-        asyncio.run(run("Continue the text based game. I choose: " + ans, st.session_state.messages, True))
+        stickFooter()
+
+def stickFooter():
+    st.markdown(
+        """
+            <div class='fixed-footer'/>
+            <style>
+                div[data-testid="stVerticalBlock"] div:has(div.fixed-footer) {
+                    position: sticky;
+                    bottom: 0%;
+                    top: 28%;
+                    z-index: 999;
+                }
+            </style>
+        """,
+        unsafe_allow_html=True
+    )
 
 if __name__ == '__main__':
     main()    

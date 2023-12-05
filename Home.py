@@ -3,12 +3,9 @@ import os
 import json
 from pathlib import Path
 import streamlit as st
-from st_click_detector import click_detector
-from st_clickable_images import clickable_images
 import requests
+
 from streamlit_extras.switch_page_button import switch_page
-from PIL import Image
-import streamlit_chat
 
 st.set_page_config(
     page_title="Home",
@@ -92,30 +89,28 @@ def get_footer():
     chatbox = os.path.splitext('chatbox.png')[-1].replace('.', '')
     chatbox_bin_str = get_base64_of_bin_file('chatbox.png')
 
-    marginLeftRight = "10px"
+    marginLeftRight = "10%"
     html_code = f'''
-        <div class="container">
-            <div class="cont" style="display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;">
-                <a target="_self" href="{'/Home'}">
-                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{task};base64,{task_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Home'}">
-                    <img width="64px" heigth="64px" style="margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{home};base64,{home_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Quests'}">
-                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{quests};base64,{quests_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Home'}">
-                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{diary};base64,{diary_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Home'}">
-                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{share};base64,{share_bin_str}" />
-                </a>
-                <a target="_self" href="{'/Chat'}">
-                    <img width="100%" heigth="56px" style="margin-top:10px; margin-bottom:10px;" src="data:image/{chatbox};base64,{chatbox_bin_str}" />
-                </a>
-            </div>
-        </div>'''
+        <div class="cont" style="display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;">
+            <a target="_self" href="{'/Home'}">
+                <img width="56px" heigth="56px" style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{task};base64,{task_bin_str}" />
+            </a>
+            <a target="_self" href="{'/Home'}">
+                <img width="64px" heigth="64px" style="padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{home};base64,{home_bin_str}" />
+            </a>
+            <a target="_self" href="{'/Quests'}">
+                <img width="56px" heigth="56px" style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{quests};base64,{quests_bin_str}" />
+            </a>
+            <a target="_self" href="{'/Home'}">
+                <img width="56px" heigth="56px" style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{diary};base64,{diary_bin_str}" />
+            </a>
+            <a target="_self" href="{'/Home'}">
+                <img width="56px" heigth="56px" style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight}; " src="data:image/{share};base64,{share_bin_str}" />
+            </a>
+        </div>
+        <a target="_self" href="{'/Chat'}" style="display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;">
+            <img width="80%" heigth="10px" style="margin-top:10px; margin-bottom:10px;" src="data:image/{chatbox};base64,{chatbox_bin_str}" />
+        </a>'''
     return html_code
 
 def footer():
