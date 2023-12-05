@@ -2,6 +2,7 @@ sseclient-py
 urllib3
 six==1.15.0
 gTTS
+playsound
 requests
 pyaudio
 streamlit
