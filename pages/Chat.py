@@ -3,6 +3,7 @@ import json
 import sys
 import base64
 import requests
+import os
 import sseclient
 
 import streamlit as st
@@ -256,9 +257,9 @@ def get_img_with_href():
 
     html_code = f'''
         <div class="container">
-            <div class="cont" style="float:right; cursor:pointer; heigth:56px;">
+            <div class="cont" style="float:right; cursor:pointer;">
                 <a target="_self" href="{'/Home'}">
-                    <img style="width= width="56px" height="56px" src="data:image/{img_format};base64,{bin_str}" />
+                    <img width="56px" height="56px" style="margin-top:5px;" src="data:image/{img_format};base64,{bin_str}" />
                 </a>
             </div>
         </div>'''
