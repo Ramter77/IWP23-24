@@ -4,6 +4,7 @@ import sys
 import base64
 import requests
 import sseclient
+import os
 
 import streamlit as st
 import streamlit_chat
@@ -26,9 +27,14 @@ st.set_page_config(
 )
 
 with st.sidebar:
-    URIprefix = st.text_input(label="URI prefix", value=URIprefixValue, key="URIpre", placeholder="Input the URI prefix", help="The URI prefix")    #set uri prefix from textgenUI
-    URI = f'https://{URIprefix}.trycloudflare.com/v1/chat/completions'     #add prefix to get complete URI
+    #def updateURI():
+    #    st.session_state.URIprefix = URIprefix.value
+        #print("sdg")
+
+    st.session_state.URIprefix = st.text_input(label="URI prefix", key="URIpre", placeholder="Input the URI prefix", help="The URI prefix")    #set uri prefix from textgenUI
+    URI = f'https://{st.session_state.URIprefix}.trycloudflare.com/v1/chat/completions'     #add prefix to get complete URI
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
+    #st.session_state.URIprefix = URIprefix.value
 
 async def run(user_input, history, stream):
     history.append({"role": "user", "content": user_input})
@@ -42,7 +48,7 @@ async def run(user_input, history, stream):
         'stream': stream,
         'messages': history,
         'character': 'Petname',
-        'instruction_template': 'OpenChat',
+        #'instruction_template': 'OpenChat',
         ##'your_name': 'You',
 
         ##'regenerate': False,
@@ -97,7 +103,7 @@ async def run(user_input, history, stream):
         element.write(assistant_message)
 
     element.empty()
-    #history.append({"role": "assistant", "content": assistant_message})
+    history.append({"role": "assistant", "content": assistant_message})
 
     streamlit_chat.message(assistant_message)
 
@@ -183,7 +189,7 @@ def chat():
             streamlit_chat.message(user_content, is_user=True, key='chat_messages_user_'+str(nkey))
             
             assistant_content = complete_messages(0,1)
-            st.session_state.messages.append({"role": "assistant", "content": assistant_content})
+            #st.session_state.messages.append({"role": "assistant", "content": assistant_content})
             streamlit_chat.message(assistant_content, key='chat_messages_assistant_'+str(nkey))
             
             print("-------------------------Messages---------------------")
@@ -204,6 +210,7 @@ def stickHeader():
                     position: sticky;
                     top: 2.875rem;
                     z-index: 999;
+                    float: right;
                 }
             </style>
         """,
@@ -247,31 +254,53 @@ def header():
             unsafe_allow_html=True
         )
 
-        images = []
-        with open("x.png", "rb") as image:
-            encoded = base64.b64encode(image.read()).decode()
-            images.append(f"data:image/jpeg;base64,{encoded}")
-
-        clicked = clickable_images(
-            images,
-            titles=["Back"],
-            div_style={"display": "flex", "justify-content": "right", "heigth": "64px", "flex-wrap": "wrap", "cursor": "pointer"},
-            img_style={"width": "64px", "heigth": "64px"},
-        )
-
-        if (clicked == 0):
-            switch_page("Home")
+        gif_html = get_img_with_href()
+        st.markdown(gif_html, unsafe_allow_html=True)
 
         stickHeader()
+
+@st.cache_data()
+def get_img_with_href():
+    img_format = os.path.splitext('x.png')[-1].replace('.', '')
+    bin_str = get_base64_of_bin_file('x.png')
+
+    html_code = f'''
+        <div class="container">
+            <div class="cont" style="float:right; cursor:pointer; heigth:56px;">
+                <a target="_self" href="{'/Home'}">
+                    <img style="width= width="56px" height="56px" src="data:image/{img_format};base64,{bin_str}" />
+                </a>
+            </div>
+        </div>'''
+    return html_code
+
+@st.cache_data()
+def get_img_with_href2(local_img_path, target_url):
+    img_format = os.path.splitext(local_img_path)[-1].replace('.', '')
+    bin_str = get_base64_of_bin_file(local_img_path)
+    html_code = f"""
+            <a href="{target_url}" style="float:right">
+                <img width="56px" heigth="56px" src="data:image/{img_format};base64,{bin_str}" />
+            </a>
+            """
+    return html_code
 
 testPrompt = "I want you to act as a very simple text based adventure game with financial context for a target audience with minor cognitive impairments. Respond with a short and simple description of the environment and then ask me a short and simple question that can only be answered with yes or no. My first scenario is: “buy a hat”"
 
 def main():
+    if "URIprefix" not in st.session_state:
+        st.session_state.URIprefix = []
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = []
+
     set_png_as_page_bg('chatBG.png')
     header()
 
     if st.button("Start Quest", use_container_width=True, type='primary'):
-        asyncio.run(run(testPrompt, [], True))
+        asyncio.run(run(testPrompt, st.session_state.messages, True))
+        #history.append({"role": "assistant", "content": assistant_message})
+
 
     col1, col2 = st.columns(2)
     ans = ''
@@ -283,7 +312,7 @@ def main():
             ans = "No"
 
     if (ans == "Yes" or ans == "No"):
-        asyncio.run(run(ans, [], True))
+        asyncio.run(run("Continue the text based game. I choose: " + ans, st.session_state.messages, True))
 
 if __name__ == '__main__':
     main()    

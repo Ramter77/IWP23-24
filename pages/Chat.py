@@ -244,22 +244,25 @@ def header():
             unsafe_allow_html=True
         )
 
-        images = []
-        with open("x.png", "rb") as image:
-            encoded = base64.b64encode(image.read()).decode()
-            images.append(f"data:image/jpeg;base64,{encoded}")
-
-        clicked = clickable_images(
-            images,
-            titles=["Back"],
-            div_style={"display": "flex", "justify-content": "right", "heigth": "64px", "flex-wrap": "wrap", "cursor": "pointer"},
-            img_style={"width": "64px", "heigth": "64px"},
-        )
-
-        if (clicked == 0):
-            switch_page("Home")
+        gif_html = get_img_with_href()
+        st.markdown(gif_html, unsafe_allow_html=True)
 
         stickHeader()
+
+@st.cache_data()
+def get_img_with_href():
+    img_format = os.path.splitext('x.png')[-1].replace('.', '')
+    bin_str = get_base64_of_bin_file('x.png')
+
+    html_code = f'''
+        <div class="container">
+            <div class="cont" style="float:right; cursor:pointer; heigth:56px;">
+                <a target="_self" href="{'/Home'}">
+                    <img style="width= width="56px" height="56px" src="data:image/{img_format};base64,{bin_str}" />
+                </a>
+            </div>
+        </div>'''
+    return html_code
 
 def main():
     set_png_as_page_bg('chatBG.png')
