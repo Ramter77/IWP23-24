@@ -18,7 +18,7 @@ HOST = 'localhost:5005'
 
 # For reverse-proxied streaming, the remote will likely host with ssl - wss://
 # URI = 'wss://your-uri-here.trycloudflare.com/api/v1/stream'
-URIprefixValue = "h-textbook-rpm-vegetation"
+
 
 st.set_page_config(
     page_title="QuestChat",
@@ -28,12 +28,16 @@ st.set_page_config(
 )
 
 with st.sidebar:
-    #def updateURI():
-    #    st.session_state.URIprefix = URIprefix.value
-        #print("sdg")
+    URIprefixValue = "exploration-baltimore-lack-bio"
+    if "URIpre" not in st.session_state:
+        #st.session_state.URIpre = URIprefixValue
+        st.text_input(label="URI prefix", key="URIpre", value=URIprefixValue, placeholder=URIprefixValue, help="The URI prefix")    #set uri prefix from textgenUI
+    else:
+        st.text_input(label="URI prefix", key="URIpre", value=st.session_state.URIpre, placeholder=st.session_state.URIpre, help="The URI prefix")    #set uri prefix from textgenUI
+    
+    #st.write(st.session_state.URIpre)
 
-    st.session_state.URIprefix = st.text_input(label="URI prefix", key="URIpre", placeholder="Input the URI prefix", help="The URI prefix")    #set uri prefix from textgenUI
-    URI = f'https://{st.session_state.URIprefix}.trycloudflare.com/v1/chat/completions'     #add prefix to get complete URI
+    URI = f'http://{st.session_state.URIpre}.trycloudflare.com/v1/chat/completions'     #add prefix to get complete URI
     temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
     #st.session_state.URIprefix = URIprefix.value
 

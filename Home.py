@@ -18,6 +18,20 @@ st.set_page_config(
 title = "Ava"
 subtitle = "Daily motivational text"
 
+with st.sidebar:
+    URIprefixValue = "exploration-baltimore-lack-bio"
+    if "URIpre" not in st.session_state:
+        #st.session_state.URIpre = URIprefixValue
+        st.text_input(label="URI prefix", key="URIpre", value=URIprefixValue, placeholder=URIprefixValue, help="The URI prefix")    #set uri prefix from textgenUI
+    else:
+        st.text_input(label="URI prefix", key="URIpre", value=st.session_state.URIpre, placeholder=st.session_state.URIpre, help="The URI prefix")    #set uri prefix from textgenUI
+    
+    #st.write(st.session_state.URIpre)
+
+    URI = f'http://{st.session_state.URIpre}.trycloudflare.com/v1/chat/completions'     #add prefix to get complete URI
+    temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
+    #st.session_state.URIprefix = URIprefix.value
+
 def header():
     with st.container():
         st.markdown(
