@@ -48,6 +48,7 @@ def header():
                 font-size:50px !important;
                 color: #f9a01b !important;
                 width: 100%;
+                margin-top: 10px;
                 margin-bottom: 0%;
             }
             .logo-img {
@@ -64,7 +65,7 @@ def header():
 
         st.markdown(
             f"""
-            <div class="container">
+            <div class="container" style="margin-bottom: 10px;">
                 <p class="logo-text">{title}</p>
                 <img class="logo-img" src="data:image/png;base64,{base64.b64encode(open("currency.png", "rb").read()).decode()}">
                 <img class="logo-img" src="data:image/png;base64,{base64.b64encode(open("menu.png", "rb").read()).decode()}">

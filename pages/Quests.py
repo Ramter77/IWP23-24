@@ -32,7 +32,7 @@ def stickFooter():
             <style>
                 div[data-testid="stVerticalBlock"] div:has(div.fixed-footer) {
                     position: sticky;
-                    bottom: 11%;
+                    bottom: 0%;
                     top: 28%;
                     z-index: 999;
                 }

@@ -240,6 +240,10 @@ def header():
                 padding-top: 15px;
                 padding-bottom: 120px;
             }
+
+            .st-emotion-cache-usj992 {
+                background-color: transparent;
+            }
             </style>
             """,
             unsafe_allow_html=True
