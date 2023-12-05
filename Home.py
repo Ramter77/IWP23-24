@@ -1,4 +1,5 @@
 import base64
+import os
 import json
 from pathlib import Path
 import streamlit as st
@@ -17,7 +18,7 @@ st.set_page_config(
 #st.sidebar.success("Select a demo above.")
 
 #UI
-title = "Petname"
+title = "Ava"
 subtitle = "Daily motivational text"
 
 def header():
@@ -25,6 +26,9 @@ def header():
         st.markdown(
             """
             <style>
+            div {
+                background-color: transparent;
+            }
             .st-emotion-cache-1y4p8pa {
                 padding: 0;
                 padding-right: 10px;
@@ -32,6 +36,7 @@ def header():
                 padding-top: 15px;
             }
             .container {
+                background-color: transparent;
                 height: 50px;
                 background: none;
                 display: flex;
@@ -70,39 +75,59 @@ def header():
 
         stickHeader()
 
+@st.cache_data()
+def get_footer():
+    task = os.path.splitext('task.png')[-1].replace('.', '')
+    task_bin_str = get_base64_of_bin_file('task.png')
+    home = os.path.splitext('home.png')[-1].replace('.', '')
+    home_bin_str = get_base64_of_bin_file('home.png')
+    quests = os.path.splitext('quests.png')[-1].replace('.', '')
+    quests_bin_str = get_base64_of_bin_file('quests.png')
+    diary = os.path.splitext('diary.png')[-1].replace('.', '')
+    diary_bin_str = get_base64_of_bin_file('diary.png')
+    share = os.path.splitext('share.png')[-1].replace('.', '')
+    share_bin_str = get_base64_of_bin_file('share.png')
+
+    chatbox = os.path.splitext('chatbox.png')[-1].replace('.', '')
+    chatbox_bin_str = get_base64_of_bin_file('chatbox.png')
+
+    marginLeftRight = "10px"
+    html_code = f'''
+        <div class="container">
+            <div class="cont" style="display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;">
+                <a target="_self" href="{'/Home'}">
+                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{task};base64,{task_bin_str}" />
+                </a>
+                <a target="_self" href="{'/Home'}">
+                    <img width="64px" heigth="64px" style="margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{home};base64,{home_bin_str}" />
+                </a>
+                <a target="_self" href="{'/Quests'}">
+                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{quests};base64,{quests_bin_str}" />
+                </a>
+                <a target="_self" href="{'/Home'}">
+                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{diary};base64,{diary_bin_str}" />
+                </a>
+                <a target="_self" href="{'/Home'}">
+                    <img width="56px" heigth="56px" style="margin-top:4px; margin-right:{marginLeftRight}; margin-left:{marginLeftRight};" src="data:image/{share};base64,{share_bin_str}" />
+                </a>
+                <a target="_self" href="{'/Chat'}">
+                    <img width="100%" heigth="56px" style="margin-top:10px; margin-bottom:10px;" src="data:image/{chatbox};base64,{chatbox_bin_str}" />
+                </a>
+            </div>
+        </div>'''
+    return html_code
+
 def footer():
-    images = []
-    for file in ["task.png", "home.png", "quests.png", "diary.png", "share.png"]:
-        with open(file, "rb") as image:
-            encoded = base64.b64encode(image.read()).decode()
-            images.append(f"data:image/jpeg;base64,{encoded}")
-
-    images1 = []
-    with open("chatbox.png", "rb") as image:
-            encoded = base64.b64encode(image.read()).decode()
-            images1.append(f"data:image/jpeg;base64,{encoded}")
-
     with st.container():
-        clicked = clickable_images(
-            images,
-            titles=["Tasks", "Home", "Quests", "Diary", "Share"],
-            div_style={"display": "flex", "background-color": "transparent", "justify-content": "center", "flex-wrap": "wrap", "cursor": "pointer"},
-            img_style={"width": "15.5%"},
-        )
+        html1 = get_footer()
+        st.markdown(html1, unsafe_allow_html=True)
 
-        if (clicked == 2):
-            switch_page("Quests")
+        #print(clicked1)
+        #if (clicked1 == 0):
+        #    switch_page("Chat")
+        #st.image("chatbox.png")
 
-        clicked1 = clickable_images(
-            images1,
-            titles=["Chat"],
-            div_style={"display": "flex", "justify-content": "center", "flex-wrap": "wrap", "cursor": "pointer"},
-            img_style={"width": "100%"},
-        )
-
-        if (clicked1 == 0):
-            switch_page("Chat")
-
+        #audioRecord()
         stickFooter()
 
 def stickHeader():
@@ -127,7 +152,7 @@ def stickFooter():
             <style>
                 div[data-testid="stVerticalBlock"] div:has(div.fixed-footer) {
                     position: sticky;
-                    bottom: 0%;
+                    bottom: 11%;
                     top: 28%;
                     z-index: 999;
                 }
