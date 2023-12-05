@@ -1,6 +1,5 @@
 import base64
 import os
-from turtle import right
 
 import streamlit as st
 from st_clickable_images import clickable_images
