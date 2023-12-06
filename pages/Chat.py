@@ -53,7 +53,7 @@ async def run(user_input, history, stream):
         'mode': 'instruct',
         'stream': stream,
         'messages': history,
-        'character': 'Petname',
+        'character': 'Ava',
         ##'instruction_template': 'WizardLM',
         ##'your_name': 'You',
 
