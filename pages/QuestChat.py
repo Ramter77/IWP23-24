@@ -299,7 +299,7 @@ def main():
                 ans = "No"
 
         if (ans == "Yes" or ans == "No"):
-            asyncio.run(run("Continue the text based game. I choose: " + ans, st.session_state.messages, True))
+            asyncio.run(run("Continue the text based game and continue with a question that can only be answered with yes or no. I choose: " + ans, st.session_state.messages, True))
 
         stickFooter()
 
