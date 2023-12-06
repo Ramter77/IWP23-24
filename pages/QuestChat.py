@@ -170,7 +170,7 @@ def chat():
                 #streamlit_chat.message(message["content"], is_user=True, key='chat_messages_user_'+str(nkey))
         else:
             streamlit_chat.message(message["content"], is_user=False, key='chat_messages_assistant_'+str(nkey))
-            TTS(message["content"])
+            #TTS(message["content"])
     
     #else:
     #    st.sidebar.text_input(
