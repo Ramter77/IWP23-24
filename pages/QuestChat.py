@@ -52,7 +52,7 @@ async def run(user_input, history, stream):
         'mode': 'instruct',
         'stream': stream,
         'messages': history,
-        'character': 'Petname',
+        'character': 'Ava',
         #'instruction_template': 'OpenChat',
         ##'your_name': 'You',
 
@@ -110,8 +110,8 @@ async def run(user_input, history, stream):
     element.empty()
     history.append({"role": "assistant", "content": assistant_message})
 
-    #streamlit_chat.message(assistant_message)
-    #tts(assistant_message)
+    streamlit_chat.message(assistant_message)
+    TTS(assistant_message)
 
     print()
     print("+++++++++++++++++++++++++++++++++++++++++++++++++++")
@@ -168,8 +168,8 @@ def chat():
             if i > 0:
                 print("uncomment this")
                 #streamlit_chat.message(message["content"], is_user=True, key='chat_messages_user_'+str(nkey))
-        else:
-            streamlit_chat.message(message["content"], is_user=False, key='chat_messages_assistant_'+str(nkey))
+        #else:
+            #streamlit_chat.message(message["content"], is_user=False, key='chat_messages_assistant_'+str(nkey))
             #TTS(message["content"])
     
     #else:
