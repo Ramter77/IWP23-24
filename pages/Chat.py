@@ -50,7 +50,7 @@ async def run(user_input, history, stream):
     }
     
     data = {
-        'mode': 'instruct',
+        'mode': 'chat-instruct',
         'stream': stream,
         'messages': history,
         'character': 'Ava',
