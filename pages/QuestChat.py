@@ -28,7 +28,7 @@ st.set_page_config(
 )
 
 with st.sidebar:
-    URIprefixValue = "serving-heater-attitude-dairy"
+    URIprefixValue = "urls-yn-throw-painting"
     if "URIpre" not in st.session_state:
         #st.session_state.URIpre = URIprefixValue
         st.text_input(label="URI prefix", key="URIpre", value=URIprefixValue, placeholder=URIprefixValue, help="The URI prefix")    #set uri prefix from textgenUI

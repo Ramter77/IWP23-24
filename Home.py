@@ -1,38 +1,31 @@
 import base64
 import os
-import json
-from pathlib import Path
 import streamlit as st
-import requests
+from streamlit_extras.switch_page_button import switch_page #to switch_page without reloading
 
-from streamlit_extras.switch_page_button import switch_page
-
+#Page config (Title, icon and collapsed sidebar)
 st.set_page_config(
     page_title="Home",
     page_icon="😎",
     initial_sidebar_state="collapsed"
 )
-#st.sidebar.success("Select a demo above.")
 
-#UI
-title = "Ava"
-subtitle = "Daily motivational text"
-
+#Sidebar (saving URIprefix in session_state)
 with st.sidebar:
-    URIprefixValue = "serving-heater-attitude-dairy"
+    URIprefixValue = "urls-yn-throw-painting"
     if "URIpre" not in st.session_state:
-        #st.session_state.URIpre = URIprefixValue
-        st.text_input(label="URI prefix", key="URIpre", value=URIprefixValue, placeholder=URIprefixValue, help="The URI prefix")    #set uri prefix from textgenUI
+        st.text_input(label="URI prefix", key="URIpre", value=URIprefixValue, placeholder=URIprefixValue, help="The URI prefix")
     else:
-        st.text_input(label="URI prefix", key="URIpre", value=st.session_state.URIpre, placeholder=st.session_state.URIpre, help="The URI prefix")    #set uri prefix from textgenUI
-    
-    #st.write(st.session_state.URIpre)
+        st.text_input(label="URI prefix", key="URIpre", value=st.session_state.URIpre, placeholder=st.session_state.URIpre, help="The URI prefix")
 
     URI = f'http://{st.session_state.URIpre}.trycloudflare.com/v1/chat/completions'     #add prefix to get complete URI
-    temp = st.number_input("Temperature", value=0.1, help="Default 0.1")   #set low to get deterministic results
-    #st.session_state.URIprefix = URIprefix.value
+    temp = st.number_input("Temperature", value=0.01, help="Default 0.01")                #set low to get deterministic results
 
+#Header with title, currency icon and menu button
 def header():
+    title = "Ava"
+    subtitle = "Daily motivational text"
+
     with st.container():
         st.markdown(
             """
@@ -87,59 +80,58 @@ def header():
 
         stickHeader()
 
+#Navigation menu footer (with href instead of switch_page because using "st-clickable-images" or "st-click-detector" set a background-color which didn't work with the background image)
+#On home/quests page the Home/Quests logo is bigger than the others and no margin-top
 @st.cache_data()
-def get_footer():
+def getFooter():
     task = os.path.splitext('task.png')[-1].replace('.', '')
-    task_bin_str = get_base64_of_bin_file('task.png')
+    taskBinStr = getBase64OfBinFile('task.png')
     home = os.path.splitext('home.png')[-1].replace('.', '')
-    home_bin_str = get_base64_of_bin_file('home.png')
+    homeBinStr = getBase64OfBinFile('home.png')
     quests = os.path.splitext('quests.png')[-1].replace('.', '')
-    quests_bin_str = get_base64_of_bin_file('quests.png')
+    questsBinStr = getBase64OfBinFile('quests.png')
     diary = os.path.splitext('diary.png')[-1].replace('.', '')
-    diary_bin_str = get_base64_of_bin_file('diary.png')
+    diaryBinStr = getBase64OfBinFile('diary.png')
     share = os.path.splitext('share.png')[-1].replace('.', '')
-    share_bin_str = get_base64_of_bin_file('share.png')
+    shareBinStr = getBase64OfBinFile('share.png')
 
     chatbox = os.path.splitext('chatbox.png')[-1].replace('.', '')
-    chatbox_bin_str = get_base64_of_bin_file('chatbox.png')
+    chatboxBinStr = getBase64OfBinFile('chatbox.png')
 
+    widthHeigth = "48px"
+    bigWidthHeigth = "60px"
     marginLeftRight = "10%"
-    html_code = f'''
+    htmlCode = f"""
         <div class="cont" style="display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;">
             <a target="_self" href="{'/Home'}">
-                <img width="56px" heigth="56px" style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{task};base64,{task_bin_str}" />
+                <img width={widthHeigth} heigth={widthHeigth} style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{task};base64,{taskBinStr}" />
             </a>
             <a target="_self" href="{'/Home'}">
-                <img width="64px" heigth="64px" style="padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{home};base64,{home_bin_str}" />
+                <img width={bigWidthHeigth} heigth={bigWidthHeigth} style="padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{home};base64,{homeBinStr}" />
             </a>
             <a target="_self" href="{'/Quests'}">
-                <img width="56px" heigth="56px" style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{quests};base64,{quests_bin_str}" />
+                <img width={widthHeigth} heigth={widthHeigth} style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{quests};base64,{questsBinStr}" />
             </a>
             <a target="_self" href="{'/Home'}">
-                <img width="56px" heigth="56px" style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{diary};base64,{diary_bin_str}" />
+                <img width={widthHeigth} heigth={widthHeigth} style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight};" src="data:image/{diary};base64,{diaryBinStr}" />
             </a>
             <a target="_self" href="{'/Home'}">
-                <img width="56px" heigth="56px" style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight}; " src="data:image/{share};base64,{share_bin_str}" />
+                <img width={widthHeigth} heigth={widthHeigth} style="margin-top:4px; padding-right:{marginLeftRight}; padding-left:{marginLeftRight}; " src="data:image/{share};base64,{shareBinStr}" />
             </a>
         </div>
         <a target="_self" href="{'/Chat'}" style="display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;">
-            <img width="80%" heigth="10px" style="margin-top:10px; margin-bottom:10px;" src="data:image/{chatbox};base64,{chatbox_bin_str}" />
-        </a>'''
-    return html_code
+            <img width="80%" heigth="10px" style="margin-top:10px; margin-bottom:10px;" src="data:image/{chatbox};base64,{chatboxBinStr}" />
+        </a>"""
+    return htmlCode
 
 def footer():
     with st.container():
-        html1 = get_footer()
-        st.markdown(html1, unsafe_allow_html=True)
+        html = getFooter()
+        st.markdown(html, unsafe_allow_html=True)
 
-        #print(clicked1)
-        #if (clicked1 == 0):
-        #    switch_page("Chat")
-        #st.image("chatbox.png")
-
-        #audioRecord()
         stickFooter()
 
+#Makes the header stick to the top
 def stickHeader():
     st.markdown(
         """
@@ -155,6 +147,7 @@ def stickHeader():
         unsafe_allow_html=True
     )
 
+#Makes the footer stick to the bottom
 def stickFooter():
     st.markdown(
         """
@@ -171,31 +164,32 @@ def stickFooter():
         unsafe_allow_html=True
     )
 
-@st.cache_data()
-def get_base64_of_bin_file(bin_file):
-    with open(bin_file, 'rb') as f:
+#Returns image converted to base64
+@st.cache_data()    #cache images
+def getBase64OfBinFile(binFile):
+    with open(binFile, 'rb') as f:
         data = f.read()
     return base64.b64encode(data).decode()
 
-def set_png_as_page_bg(png_file):
-    bin_str = get_base64_of_bin_file(png_file)
-    page_bg_img = '''
+#Sets a png as the background
+def setPNGasPageBG(pngFile):
+    binStr = getBase64OfBinFile(pngFile)
+    pageBGimg = """
     <style>
     .stApp {
-    background-image: url("data:image/png;base64,%s");
-    background-size: cover;
+        background-image: url("data:image/png;base64,%s");
+        background-size: cover;
     }
     </style>
-    ''' % bin_str
-    
-    st.markdown(page_bg_img, unsafe_allow_html=True)
+    """ % binStr
+    st.markdown(pageBGimg, unsafe_allow_html=True)
     return
 
 def main(): 
+    setPNGasPageBG("homeBG.png")
     header()
-    st.image("room.png", use_column_width="always")
+    st.image("room.png", use_column_width="always")     #for now just an image
     footer()
 
 if __name__ == '__main__':
-    set_png_as_page_bg('homeBG.png')
     main()
