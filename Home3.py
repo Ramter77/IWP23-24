@@ -47,11 +47,12 @@ st.subheader("Clothes shopping")
 
 colT1,colT2 = st.columns([0.25,0.75])
 with colT2:
-    st.image("hats.png", width=256)
+    #st.image("hats.png", width=256)
 
     colTT1,colTT2 = st.columns([0.4,0.6])
     with colTT1:
-        st.image("cat.png", width=64)
+        print("cat")
+        #st.image("cat.png", width=64)
     with colTT2:
         st.write("€"+str(st.session_state['money']))
     
