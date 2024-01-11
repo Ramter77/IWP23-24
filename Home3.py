@@ -1,5 +1,5 @@
 import streamlit as st
-from st_click_detector import click_detector
+#from st_click_detector import click_detector
 from streamlit_extras.switch_page_button import switch_page #to switch_page without reloading
 
 #Page config (Title, icon and collapsed sidebar)
