@@ -198,7 +198,7 @@ def numButtons(num1, num2):
         st.button(str(key2), use_container_width=useContainerWidth, on_click=changeText2, args=[key2, value2], type="primary")
 
 def navButtons(back, forward):
-    useImages = True
+    useImages = False
     if useImages:
         back = os.path.splitext('denyQuest.png')[-1].replace('.', '')
         backBinStr = getBase64OfBinFile('denyQuest.png')
