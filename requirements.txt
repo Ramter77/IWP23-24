@@ -5,6 +5,7 @@ gTTS
 requests
 pyaudio
 streamlit
+st_click_detector
 streamlit_extras
 streamlit_chat
 audio-recorder-streamlit
