@@ -69,8 +69,21 @@ def setPNGasPageBG(pngFile):
     st.markdown(pageBGimg, unsafe_allow_html=True)
     return
 
-st.header("Quest")
+#st.header("Quest")
+st.markdown("""<h1 style="padding-top:0;">Quest</h1>""", unsafe_allow_html=True)
 st.markdown("""<h3 style="padding:0;">Clothes shopping</h3>""", unsafe_allow_html=True)
+#st.markdown("""<img></img>""")
+hats = os.path.splitext('hats.png')[-1].replace('.', '')
+hatsBinStr = getBase64OfBinFile('hats.png')
+st.markdown(f"""
+    <div class="cont" style="display:flex; justify-content:center; flex-wrap:wrap; padding-top:10px;">
+        <a>
+            <img width=150 style="" src="data:image/{hats};base64,{hatsBinStr}" />
+        </a>
+    </div>""", unsafe_allow_html=True)
+
+#st.image("hats.png", width=150)
+
 #st.subheader("Clothes shopping")
 setPNGasPageBG("homeBG.png")
 arrowBack = ":arrow_backward:"          #👈
@@ -198,17 +211,28 @@ def numButtons(num1, num2):
         st.button(str(key2), use_container_width=useContainerWidth, on_click=changeText2, args=[key2, value2], type="primary")
 
 def navButtons(back, forward):
-    useImages = False
+    useImages = True
     if useImages:
-        back = os.path.splitext('denyQuest.png')[-1].replace('.', '')
-        backBinStr = getBase64OfBinFile('denyQuest.png')
-        forward = os.path.splitext('acceptQuest.png')[-1].replace('.', '')
-        forwardBinStr = getBase64OfBinFile('acceptQuest.png')
+        backwards = os.path.splitext('denyQuest.png')[-1].replace('.', '')
+        backwardsBinStr = getBase64OfBinFile('denyQuest.png')
+        forwards = os.path.splitext('acceptQuest.png')[-1].replace('.', '')
+        forwardsBinStr = getBase64OfBinFile('acceptQuest.png')
+        
+        #st.write("back: " + str(back) + " and forward: " + str(forward))
+        if back == True and forward == True:
+            content = f"""
+                <a href='#' id='Image 1'><img width='50px' style="float:left;" src="data:image/{backwards};base64,{backwardsBinStr}"></a>
+                <a href='#' id='Image 2'><img width='50px' style="float:right;" src="data:image/{forwards};base64,{forwardsBinStr}"></a>
+                """
+        elif back == True:
+            content = f"""
+                <a href='#' id='Image 1'><img width='50px' style="float:left;" src="data:image/{backwards};base64,{backwardsBinStr}"></a>
+                """
+        elif forward == True:
+            content = f"""
+                <a href='#' id='Image 2'><img width='50px' style="float:right;" src="data:image/{forwards};base64,{forwardsBinStr}"></a>
+                """
 
-        content = f"""
-            <a href='#' id='Image 1'><img width='50px' style="float:left;" src="data:image/{back};base64,{backBinStr}"></a>
-            <a href='#' id='Image 2'><img width='50px' style="float:right;" src="data:image/{forward};base64,{forwardBinStr}"></a>
-            """
         clicked = click_detector(content)
 
         if clicked == "Image 1":
