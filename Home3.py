@@ -218,7 +218,7 @@ def navButtons(back, forward):
         
     else:
         #Use columns
-        if back and forward:
+        if back == True and forward == True:
             colT1,colT2 = st.columns(2)
             with colT1:
                 st.image("denyQuest.png", width=64)
