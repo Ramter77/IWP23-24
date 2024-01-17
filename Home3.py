@@ -221,10 +221,10 @@ def navButtons(back, forward):
         if back == True and forward == True:
             colT1,colT2 = st.columns(2)
             with colT1:
-                st.image("denyQuest.png", width=64)
+                #st.image("denyQuest.png", width=64)
                 st.button(arrowBack, use_container_width=useContainerWidth, on_click=changeText, args=['Back'], type="secondary")
             with colT2:
-                st.image("acceptQuest.png", width=64)
+                #st.image("acceptQuest.png", width=64)
                 st.button(arrowForward, use_container_width=useContainerWidth, on_click=changeText, args=['Forward'], type="secondary")
         
         #Dont use columns
