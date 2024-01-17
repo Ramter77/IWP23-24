@@ -1,3 +1,6 @@
+base64
+os
+
 sseclient-py
 urllib3
 six==1.15.0
@@ -5,7 +8,7 @@ gTTS
 requests
 pyaudio
 streamlit
-st_click_detector
+st-click-detector
 streamlit_extras
 streamlit_chat
 audio-recorder-streamlit
