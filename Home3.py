@@ -5,17 +5,9 @@ from st_click_detector import click_detector
 from streamlit_extras.let_it_rain import rain
 #from streamlit_extras.switch_page_button import switch_page #to switch_page without reloading
 
-
-#add background to text area
-#make main pic bigger
-#images of hat, coat, shoe shopping
-
-
-
-
 #Page config (Title, icon and collapsed sidebar)
 st.set_page_config(
-    page_title="Home",
+    page_title="Quests",
     page_icon="😎",
     initial_sidebar_state="collapsed"
 )
@@ -249,7 +241,7 @@ def navButtons(back, forward):
         forwardsBinStr = getBase64OfBinFile('acceptQuest.png')
 
         st.markdown("""
-            <style>iframe {background-color: rgb(48, 36, 92); border:1px solid rgba(250, 250, 250, 0.2); border-radius:0.5rem;}
+            <style>iframe {background-color: rgb(48, 36, 92); border-radius:0.5rem;}
                 .st-emotion-cache-15ky26c {display:block;}
                     </style>
             """, unsafe_allow_html=True)
