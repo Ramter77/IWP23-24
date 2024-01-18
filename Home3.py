@@ -2,7 +2,16 @@ import streamlit as st
 import base64
 import os
 from st_click_detector import click_detector
+from streamlit_extras.let_it_rain import rain
 #from streamlit_extras.switch_page_button import switch_page #to switch_page without reloading
+
+
+#add background to text area
+#make main pic bigger
+#images of hat, coat, shoe shopping
+
+
+
 
 #Page config (Title, icon and collapsed sidebar)
 st.set_page_config(
@@ -41,12 +50,21 @@ if 'money' not in st.session_state:
 #Text array
 moneyThreshold = 20
 optionsDict = {"Blue Hat": 10, "Red Hat": 30, "Brown Coat": 40, "Black Coat": 30, "White Shoes": 40, "Orange Shoes": 30}
-print("Current choice: " + str(st.session_state['currentChoice']))
+#print("Current choice: " + str(st.session_state['currentChoice']))
 texts = ["Let’s go clothes shopping!", "You have €100. You need to have at least €20 for groceries after your clothes shopping", "First, let’s buy a new hat!", "There are 2 hats. The blue hat costs €10. The red hat costs €30.", "Which hat do you want to buy?", "Great! You bought the " + str(st.session_state['currentChoice']) + " ! You now have €" + str(st.session_state['money']) + " .", "Let’s continue with the clothes shopping.", "Let’s buy a new coat!", "There are 2 coats. The brown coat costs €40. The black coat costs €30.", "Which coat do you want to buy?", "Great! You bought the ____ coat! You now have €____.", "Let’s continue with the clothes shopping.", "Let’s buy new shoes!", "There are 2 pairs of shoes. The white shoes cost €40. The orange shoes cost €30.", "Which pair of shoes do you want to buy?", "Good job! You still have €20 after your clothes shopping!", "Do you want to try again?"]
-print("Texts length")
-print(len(texts))
+#print("Texts length")
+#print(len(texts))
 
 useContainerWidth = True
+
+
+def failure():
+    rain(
+        emoji="🙁",
+        font_size=54,
+        falling_speed=5,
+        animation_length="infinite",
+    )
 
 #Returns image converted to base64
 @st.cache_data()    #cache images
@@ -69,17 +87,29 @@ def setPNGasPageBG(pngFile):
     st.markdown(pageBGimg, unsafe_allow_html=True)
     return
 
+def getPicture():
+    type = ""
+    if (st.session_state['counter'] > 11):
+        type = "shoes"
+    elif (st.session_state['counter'] > 6):
+        type = "coats"
+    else:
+        type = "hats"
+    pic = os.path.splitext(str(type) + '.png')[-1].replace('.', '')
+    picBinStr = getBase64OfBinFile(str(type) + '.png')
+    return pic, picBinStr
+
 #st.header("Quest")
 st.markdown("""<h1 style="padding-top:0;">Quest</h1>""", unsafe_allow_html=True)
-st.markdown("""<h3 style="padding:0;">Clothes shopping</h3>""", unsafe_allow_html=True)
+st.markdown("""<h3 style="padding:0; text-align:center;">Clothes shopping</h3>""", unsafe_allow_html=True)
 #st.markdown("""<img></img>""")
-hats = os.path.splitext('hats.png')[-1].replace('.', '')
-hatsBinStr = getBase64OfBinFile('hats.png')
+
+picture, pictureBinStr = getPicture()
+#hats = os.path.splitext('hats.png')[-1].replace('.', '')
+#hatsBinStr = getBase64OfBinFile('hats.png')
 st.markdown(f"""
     <div class="cont" style="display:flex; justify-content:center; flex-wrap:wrap; padding-top:10px;">
-        <a>
-            <img width=150 style="" src="data:image/{hats};base64,{hatsBinStr}" />
-        </a>
+        <img width=250px style="" src="data:image/{picture};base64,{pictureBinStr}" />
     </div>""", unsafe_allow_html=True)
 
 #st.image("hats.png", width=150)
@@ -102,15 +132,15 @@ def changeText(choice):
             st.session_state['counter'] -= 1
 
     if st.session_state['counter'] == 5:
-        st.session_state['text'] = "Great! You bought the " + str(st.session_state['currentChoice']) + " ! You now have €" + str(st.session_state['money']) + " ."
+        st.session_state['text'] = "Great! You bought the " + str(st.session_state['currentChoice']) + "! You now have €" + str(st.session_state['money']) + "."
     elif st.session_state['counter'] == 10:
-        st.session_state['text'] = "Great! You bought the " + str(st.session_state['currentChoice']) + " ! You now have €" + str(st.session_state['money']) + " ."
+        st.session_state['text'] = "Great! You bought the " + str(st.session_state['currentChoice']) + "! You now have €" + str(st.session_state['money']) + "."
     elif st.session_state['counter'] == 15:
         #Check if the remaining money is higher or equal to the threshold
         if st.session_state['money'] >= moneyThreshold:
-            st.session_state['text'] = "Great! You bought the " + str(st.session_state['currentChoice']) + " ! You now have €" + str(st.session_state['money']) + " ."
+            st.session_state['text'] = "Great! You bought the " + str(st.session_state['currentChoice']) + "! You now have €" + str(st.session_state['money']) + "."
         else:
-            st.session_state['text'] = "You bought the " + str(st.session_state['currentChoice']) + " ! Unfortunately, you now have only €" + str(st.session_state['money']) + " ."
+            st.session_state['text'] = "You bought the " + str(st.session_state['currentChoice']) + "! Unfortunately, you now have only €" + str(st.session_state['money']) + "."
     else:
         st.session_state['text'] = texts[st.session_state['counter']]
 
@@ -185,10 +215,10 @@ def footer():
 
 def changeText2(key, value):
     #print(list(optionsDict.keys())[0])
-    print(key)
-    print(value)
+    #print(key)
+    #print(value)
     #print(list(optionsDict.keys()))
-    print("--------------------------")
+    #print("--------------------------")
     
 
     st.session_state['currentChoice'] = key
@@ -217,23 +247,81 @@ def navButtons(back, forward):
         backwardsBinStr = getBase64OfBinFile('denyQuest.png')
         forwards = os.path.splitext('acceptQuest.png')[-1].replace('.', '')
         forwardsBinStr = getBase64OfBinFile('acceptQuest.png')
+
+        st.markdown("""
+            <style>iframe {background-color: rgb(48, 36, 92); border:1px solid rgba(250, 250, 250, 0.2); border-radius:0.5rem;}
+                .st-emotion-cache-15ky26c {display:block;}
+                    </style>
+            """, unsafe_allow_html=True)
+        #st.components.v1.html("<div>Hello world</div>")
+
+        jsstr = "<script>function goTo() {changeText('Forward')}</script>"
+        cssstr = "<style>:root {background-color: teal;}</style>"
+        htmlstr = f"""
+        <img width='50px' style="float:left;" src="data:image/{forwards};base64,{forwardsBinStr}" onclick="goTo()">
+        """
+        #st.components.v1.html(jsstr + htmlstr + cssstr, height=64)                 ##THISS
+        #st.markdown(htmlstr, unsafe_allow_html=True)
+
+
+
+
+        js = '''
+        <script>
+            function goTo(choice):
+                #Debug print text and counter
+                print(st.session_state['text'] + " and counter: " + str(st.session_state['counter']))
+
+                #Choices
+                if choice == "Forward":
+                    st.session_state['counter'] += 1
+                elif choice == "Back":
+                    if (st.session_state['counter'] > 0):
+                        st.session_state['counter'] -= 1
+
+                if st.session_state['counter'] == 5:
+                    st.session_state['text'] = "Great! You bought the " + str(st.session_state['currentChoice']) + "! You now have €" + str(st.session_state['money']) + "."
+                elif st.session_state['counter'] == 10:
+                    st.session_state['text'] = "Great! You bought the " + str(st.session_state['currentChoice']) + "! You now have €" + str(st.session_state['money']) + "."
+                elif st.session_state['counter'] == 15:
+                    #Check if the remaining money is higher or equal to the threshold
+                    if st.session_state['money'] >= moneyThreshold:
+                        st.session_state['text'] = "Great! You bought the " + str(st.session_state['currentChoice']) + "! You now have €" + str(st.session_state['money']) + "."
+                    else:
+                        st.session_state['text'] = "You bought the " + str(st.session_state['currentChoice']) + "! Unfortunately, you now have only €" + str(st.session_state['money']) + "."
+                else:
+                    st.session_state['text'] = texts[st.session_state['counter']]
+            }
+        </script>
+
+        <button onclick="goTo('a')">Go to page a</button><br />
+        <button onclick="goTo('b')">Go to page b</button><br />
+        <button onclick="goTo('c')">Go to page c</button><br />
+        '''
+        #st.components.v1.html(js)
+        #st.components.v1.html(htmlstr)
         
+
+        #st.markdown("<style>:root {background-color: teal;}</style>")
+
+        #st.markdown("<style>iframe {margin-top: -20px;}</style>")
+        style = "<style>:root {background-color: rgb(48, 36, 92);} div {background-color: rgb(48, 36, 92);} iframe {margin-top: -50px}</style>"
         #st.write("back: " + str(back) + " and forward: " + str(forward))
         if back == True and forward == True:
             content = f"""
-                <a href='#' id='Image 1'><img width='50px' style="float:left;" src="data:image/{backwards};base64,{backwardsBinStr}"></a>
-                <a href='#' id='Image 2'><img width='50px' style="float:right;" src="data:image/{forwards};base64,{forwardsBinStr}"></a>
+                <a href='#' id='Image 1'><img width='50px' style="float:left; background-color: rgb(48, 36, 92);" src="data:image/{backwards};base64,{backwardsBinStr}"></a>
+                <a href='#' id='Image 2'><img width='50px' style="float:right; background-color: rgb(48, 36, 92);" src="data:image/{forwards};base64,{forwardsBinStr}"></a>
                 """
         elif back == True:
             content = f"""
-                <a href='#' id='Image 1'><img width='50px' style="float:left;" src="data:image/{backwards};base64,{backwardsBinStr}"></a>
+                <a href='#' id='Image 1'><img width='50px' style="float:left; background-color: rgb(48, 36, 92);" src="data:image/{backwards};base64,{backwardsBinStr}"></a>
                 """
         elif forward == True:
             content = f"""
-                <a href='#' id='Image 2'><img width='50px' style="float:right;" src="data:image/{forwards};base64,{forwardsBinStr}"></a>
+                <a href='#' id='Image 2'><img width='50px' style="float:right; background-color: rgb(48, 36, 92);" src="data:image/{forwards};base64,{forwardsBinStr}"></a>
                 """
 
-        clicked = click_detector(content)
+        clicked = click_detector(style + content)
 
         if clicked == "Image 1":
             changeText("Back")
@@ -245,10 +333,8 @@ def navButtons(back, forward):
         if back == True and forward == True:
             colT1,colT2 = st.columns(2)
             with colT1:
-                #st.image("denyQuest.png", width=64)
                 st.button(arrowBack, use_container_width=useContainerWidth, on_click=changeText, args=['Back'], type="secondary")
             with colT2:
-                #st.image("acceptQuest.png", width=64)
                 st.button(arrowForward, use_container_width=useContainerWidth, on_click=changeText, args=['Forward'], type="secondary")
         
         #Dont use columns
@@ -258,7 +344,11 @@ def navButtons(back, forward):
             st.button(arrowForward, use_container_width=True, on_click=changeText, args=['Forward'], type="secondary")
 
 #UI
-with st.container(border=True):
+
+with st.container(border=False):
+    #st.markdown(f"""
+    #    <div class="cont" style="position:relative; top:130px; border:1px solid rgba(250, 250, 250, 0.2); border-radius:0.5rem; padding:calc(1em - 1px); background-color: green; height:50px; display:flex; justify-content:center; flex-wrap:wrap; cursor:pointer;"> </div>
+    #""", unsafe_allow_html=True)
     cat = os.path.splitext('cat.png')[-1].replace('.', '')
     catBinStr = getBase64OfBinFile('cat.png')
     gem = os.path.splitext('currency.png')[-1].replace('.', '')
@@ -270,11 +360,16 @@ with st.container(border=True):
         <img width={width1} style="margin-top:17.5px;" src="data:image/{cat};base64,{catBinStr}" />
 
         <div style="float:right; display:flex; flex-wrap:wrap;">
-                <img width={width2} height={width2} style="margin-top:0px;" src="data:image/{gem};base64,{gemBinStr}" /> 
                 <h1 style="padding:0; float:right;">{"€"+str(st.session_state['money'])}</h1>
-        </div>"""
-
+        </div>
+        
+        <div class="cont" style="height:115px; margin-bottom: -50px; margin-top: -6.5px; border:1px solid rgba(250, 250, 250, 0.2); border-radius:0.5rem; padding:calc(1em - 1px); background-color: rgb(48, 36, 92); display:flex; justify-content:center; flex-wrap:wrap;">
+            <p>{st.session_state['text']}</p>
+        </div>
+    """
     st.markdown(html, unsafe_allow_html=True)
+    #<img width={width2} height={width2} style="margin-top:0px;" src="data:image/{gem};base64,{gemBinStr}" /> 
+
 
     #<h1 style="padding-left:90px; float:right;">{"💰 €"+str(st.session_state['money'])}</h1>
     #<div class="cont" style="height:30px; display:flex; flex-wrap:wrap; margin-bottom:0px; padding-bottom:0px;">
@@ -287,8 +382,8 @@ with st.container(border=True):
     #    #st.image("gems.png", width=64)
     #    st.subheader("💰 €"+str(st.session_state['money']))
 
-    st.text_area("Text", height=10, value=st.session_state['text'], label_visibility="collapsed")       #disabled=True turns off interactivity but also grays it out
-    
+    #st.text_area("Text", height=10, value=st.session_state['text'], label_visibility="collapsed")       #disabled=True turns off interactivity but also grays it out
+
     #if (st.session_state['counter'] == -1):
     #    st.button("Back", use_container_width=True, on_click=changeText, args=['Back'], type="primary")
     if (st.session_state['counter'] == 0):
@@ -312,8 +407,11 @@ with st.container(border=True):
     elif (st.session_state['counter'] == 15):
         #navButtons(False, True)
         if st.session_state['money'] >= moneyThreshold:
-            print("You Won")
+            #print("You Won")
+            st.balloons()
         else:
+            failure()
+            #st.snow()
             navButtons(False, True)
         #print("END")
 
@@ -325,14 +423,14 @@ with st.container(border=True):
                 st.session_state['currentChoice'] = ""
                 st.session_state['money'] = 100
                 st.rerun()
-          
+            
     #elif (st.session_state['counter'] > len(texts)):
     #    print("--------------------END-------------------")
     else:
         navButtons(True, True)
 
 
-footer()
+#footer()
 
 
 
