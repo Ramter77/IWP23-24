@@ -92,7 +92,18 @@ def getPicture():
     return pic, picBinStr
 
 #st.header("Quest")
-st.markdown("""<h1 style="padding-top:0;">Quest</h1>""", unsafe_allow_html=True)
+
+close = os.path.splitext('close.png')[-1].replace('.', '')
+closeBinStr = getBase64OfBinFile('close.png')
+st.markdown(f"""
+        <div style="display:flex; flex-wrap:wrap;">
+            <h1 style="padding-top:0;">Quest</h1>
+            <a target="_self" href="{'/'}">
+                <img width=50px height=50px style="position:absolute; right:0; float: right" src="data:image/{close};base64,{closeBinStr}" />
+            </a>
+        </div>
+            """, unsafe_allow_html=True)
+#st.markdown("""<h1 style="padding-top:0;">Quest</h1>""", unsafe_allow_html=True)
 st.markdown("""<h3 style="padding:0; text-align:center;">Clothes shopping</h3>""", unsafe_allow_html=True)
 #st.markdown("""<img></img>""")
 
