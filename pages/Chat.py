@@ -289,7 +289,7 @@ def get_img_with_href():
 @st.cache_data()
 def TTS(txt):
     sound_file = BytesIO()
-    tts = gTTS(str(txt), lang='nl')
+    tts = gTTS(str(txt), lang='en')
     tts.write_to_fp(sound_file)
     tts.save('temp.mp3')
 
