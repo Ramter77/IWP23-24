@@ -14,7 +14,7 @@ st.set_page_config(
 
 #Sidebar (saving URIprefix in session_state)
 with st.sidebar:
-    URIprefixValue = "urls-yn-throw-painting"
+    URIprefixValue = "thoroughly-denial-airline-device"
     if "URIpre" not in st.session_state:
         st.text_input(label="URI prefix", key="URIpre", value=URIprefixValue, placeholder=URIprefixValue, help="The URI prefix")
     else:
